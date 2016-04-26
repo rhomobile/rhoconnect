@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+require 'bench'
+
+# 1) Extract Bench title
+title = ARGV[0]
+
+# 2) create result directory structure
+['bench_results', ARGV[1]].each do |dir|
+  next if dir.nil?
+  Bench.create_subdir dir
+  Dir.chdir dir
+end
+result_dir = Dir.pwd
+
+['raw_data'].each do |dir|
+  Bench.create_subdir dir
+end
+
+# 3) create meta.yml file
+meta_hash = {:x_keys => {}, :metrics => {}, :label => title}
+x_keys = ARGV[2].split() if $ARGV[1]
+x_keys ||= []
+counter = 0
+x_keys = x_keys.sort_by(&Bench.sort_natural_order)
+x_keys.each do |x_key|
+  meta_hash[:x_keys][x_key] = counter
+  counter += 1
+end
+
+meta_hash[:metrics] = {'Throughput' => 0, 'Av.Time' => 1}
+
+File.open(File.join(result_dir,'raw_data','meta.yml'), 'w') do |file|
+  file.write meta_hash.to_yaml unless meta_hash.empty?
+end

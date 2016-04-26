@@ -1,0 +1,22 @@
+:sources:
+  SimpleAdapter:
+    :poll_interval: 300
+  SampleAdapter:
+    :partition_type: app    
+    :poll_interval: 500
+  Product:
+   :partition_type: user
+   :poll_interval: 500
+
+:development:
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/api/application/
+  :push_server: http://appmike:appmikepwd@localhost:8675/
+:test:
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/api/application/
+:production:
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/api/application/
+
+  

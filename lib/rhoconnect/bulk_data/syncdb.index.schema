@@ -1,0 +1,4 @@
+CREATE INDEX by_src_id on object_values ("source_id");
+CREATE UNIQUE INDEX by_src_object ON object_values ("object", "attrib", "source_id");
+CREATE INDEX by_src_value ON object_values ("attrib", "source_id", "value");
+

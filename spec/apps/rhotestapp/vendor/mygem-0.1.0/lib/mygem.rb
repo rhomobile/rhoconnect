@@ -1,0 +1,1 @@
+require 'mygem/mygem'

@@ -1,0 +1,166 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__),'..','lib'))
+require 'net/ssh/multi'
+require 'bench'
+require 'bench/aws_utils'
+
+def process_results
+  finished_data = Bench.get_server_state("bench_statistics_data")
+  finished_data.each do |session,session_data|
+    puts "Client data for #{session} : startTime (#{session_data['start_time']}), endTime (#{session_data['end_time']})"
+    @total_count += session_data['count'].to_i
+    @start_time = session_data['start_time'].to_f unless @start_time > 0.0 and session_data['start_time'].to_f >= @start_time
+    @end_time = session_data['end_time'].to_f unless session_data['end_time'].to_f <= @end_time
+    if not session_data['times'].nil?
+      times_data = session_data['times'].split(',')
+      @times_count += times_data.size
+      times_data.each do |timevalue|
+        @times_sum += timevalue.to_f
+      end
+    end
+  end
+end
+
+def average_time
+  @times_count > 0 ? @times_sum/@times_count : 0.0
+end
+
+def save_results
+  return if Bench.result_filename.nil?
+  
+  res_hash = YAML.load_file(Bench.result_filename) if File.exist?(Bench.result_filename)
+  res_hash ||= {}
+  puts "Overall results are : startTime (#{@start_time.to_s}), endTime (#{@end_time.to_s}), count (#{@total_count.to_s}), payload (#{Bench.datasize}), concurrency (#{Bench.concurrency})"
+  res_hash[Bench.concurrency.to_s] = (@end_time > 0.0 and @start_time > 0.0) ? [@total_count/(@end_time - @start_time)] : [0.0]
+  res_hash[Bench.concurrency.to_s] << average_time
+  File.open(Bench.result_filename, 'w' ) do |file|
+    file.write res_hash.to_yaml unless res_hash.empty?
+  end
+end
+
+# 1) Extract Bench title and key
+sync_key = ARGV[0]
+
+# 2) Simulate the payload
+Bench.datasize = ARGV[1].to_i
+@expected = Bench.get_test_data(Bench.datasize)
+Bench.concurrency = ARGV[2].to_i
+
+# 3) extract result filename
+Bench.result_filename = ARGV[3] unless ARGV[3].nil?
+
+# 4) Extract server name
+server = ARGV[4] unless ARGV[4].nil?
+server ||= 'default'
+if server != 'default'
+  Bench.base_url = server
+end
+
+# 5) Create server EC2 instance
+@fog = make_fog
+server_stack = Constants::CENTOS_STACK
+server_stack[:flavor_id] = 'm1.large'
+
+puts "\n" +
+"================================================\n" +
+"          Creating Benchmark Server             \n" +
+"================================================\n" +
+"\n\n"
+
+@server = create_ec2_instance(@fog, server_stack)
+if @server.nil?
+  puts " Can not create Benchmark Server - Exiting..."
+  exit 7
+end
+
+@server_dist = compile_stack_info('centos')
+
+# Establish connections
+@server_ssh = establish_ssh_connection(@server.dns_name, @server_dist[:remote_user])
+@server_dist[:remote_home] = @server_ssh.run("echo ~")[0].stdout.strip
+
+install_package(@server_dist, @server_ssh)
+
+start_servers(@server_ssh)
+
+success = check_rc_service(@server.dns_name)
+
+puts " success is #{success}"
+
+if not success 
+  exit 10
+end
+
+destroy_ec2_instance(@server)
+exit 1
+
+# 5) Set up the server
+begin 
+  Bench.admin_login = 'rhoadmin'
+  Bench.admin_password = ''
+  Bench.get_test_server
+  Bench.reset_app
+  Bench.user_name = "benchuser"
+  Bench.password = "password"
+  Bench.set_server_state("test_db_storage:application:#{Bench.user_name}",@expected)
+  Bench.reset_refresh_time('MockAdapter')
+
+  #6) set the sync key
+  @start_time = Time.now + 5.0
+  server_key = "#{sync_key}_#{Bench.datasize}"
+  Bench.set_server_state(server_key, @start_time.to_f.to_s)
+  puts "Sync Key #{server_key} is set to #{@start_time} - waiting for clients now!!!"
+
+  #7) Start-up all clients
+  n_iterations = 50
+  command="cd /opt/rhoconnect/bench/distr_bench; ./run_distr_client.sh #{sync_key} #{server} #{n_iterations} #{Bench.datasize} #{Bench.adapter_name} 1>/dev/null"
+
+  clients = ['ec2-107-20-56-25.compute-1.amazonaws.com',
+    'ec2-107-20-56-25.compute-1.amazonaws.com',
+    'ec2-67-202-35-54.compute-1.amazonaws.com',
+    'ec2-50-17-104-6.compute-1.amazonaws.com',
+    'ec2-204-236-222-92.compute-1.amazonaws.com',
+    'ec2-50-17-92-146.compute-1.amazonaws.com',
+    'ec2-107-22-124-158.compute-1.amazonaws.com',
+    'ec2-184-72-165-204.compute-1.amazonaws.com',
+    'ec2-107-20-41-32.compute-1.amazonaws.com',
+    'ec2-107-22-35-238.compute-1.amazonaws.com',
+    'ec2-50-16-180-250.compute-1.amazonaws.com']
+
+  sess_options = {:keys => ['/tmp/EC2-inst.pem']}
+  Net::SSH::Multi.start({:default_user => 'ec2-user'}) do |session|
+    # define the servers we want to use
+    session.use(sess_options) { clients[0..Bench.concurrency] }
+  
+    # execute commands on all servers
+    session.exec command
+  end
+  
+  #8) wait until all distributed clients are finished
+  while true
+    sleep(1)
+    stats_data = Bench.get_server_state("bench_statistics_data")
+    if (not stats_data.nil?) and stats_data.size == Bench.concurrency
+      break
+    end
+    puts " Waiting for the clients to finish : #{Bench.concurrency - stats_data.size} out of #{Bench.concurrency}"
+  end
+
+  # 9) Now, save all data to the disk
+  sleep(1)
+  @total_count = 0
+  @start_time = 0.0
+  @end_time = 0.0
+  @times_sum = 0.0
+  @times_count = 0
+  process_results
+  save_results
+  
+  #10) Clean-up the db
+  Bench.reset_app
+rescue Exception => e
+  puts "Distributed Bench Run-time ERROR!!!"
+  puts e
+end

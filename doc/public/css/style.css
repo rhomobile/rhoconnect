@@ -1,0 +1,20 @@
+h2 { background: #ddd; text-align: center; padding: 4px; }
+
+.content { font-size: 1.2em; }
+.content h3 { background: #ffd; font-size: 1.5em; padding: 6px 2px; }
+
+#wrapper { text-align: left; width: 640px; } /* toc width */
+
+/* font styling */	
+#wrapper h1 { font-size: 18px; margin-bottom: 0.8em; text-align: left; }
+#wrapper a { color: #222; }
+#wrapper a:hover { color: #555; }
+#wrapper p { font-size: 18px; margin: 1.5em 0; }
+/*#wrapper p a { background: url(dot.gif) repeat-x bottom left; }*/
+
+/* start table of contents styling */
+ul#toc { list-style: none; width: 640px; padding-left: 0;}
+/*#toc li { background: url(dot.gif) repeat-x 0 0.85em; }*/
+#toc li a { font-size: 14px; background: #FFF; padding: 0 0 0 10px; }
+#toc li span { font-size: 14px; background: #FFF; padding: 0 0 0 4px; }
+#toc li br { clear: both; }

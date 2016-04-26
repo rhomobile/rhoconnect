@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby -W0
+require 'thor'
+
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+require_relative "../lib/rhoconnect/utilities"
+include Utilities
+
+# Default settings (template/settings/settings.yml)
+RHOCONNECT_PORT  = 9292
+REDIS_SERVER_URL = "localhost:6379"
+PUSH_SERVER_URL  = "http://someappname@localhost:8675/"
+API_TOKEN        = "my-rhoconnect-token"
+
+class Execute < Thor
+  no_tasks {
+    def self.define_task(&block)
+      Execute.class_eval(&block)
+    end
+  }
+
+  require_relative "../commands/parser"
+end
+
+begin
+  Execute.start
+rescue SystemExit => se
+  # This is normal
+rescue Exception => e
+  if ARGV[0] == 'update' and e.class == Gem::LoadError
+    puts e.message
+    puts "\nUpdate your Gemfile to latest rhoconnect release and run 'rhoconnect update' again."
+    puts "See http://docs.rhomobile.com/rhoconnect/install#upgrading-an-existing-application about update details.\n\n"
+  else
+    puts "Run rhoconnect command error: #{e.inspect}"
+    puts e.backtrace.join("\n")
+  end
+end

@@ -1,0 +1,12 @@
+source 'http://rubygems.org'
+
+gem 'rhoconnect', :path => '../../'
+
+gemfile_path = File.join(File.dirname(__FILE__), '..', '..', 'generators','templates', 'application', "rcgemfile")
+begin 
+  eval(IO.read(gemfile_path)) 
+rescue Exception => e
+  puts "ERROR: Couldn't find RhoConnect .rcgemfile"
+  puts e.message
+  exit 1
+end

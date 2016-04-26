@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>RhoConnect Console</title>
+	<style type="text/css">
+		a.disable_link {
+			color:#CCC;
+		}
+		a.disable_link:hover {
+			color:#CCC;
+		}
+	</style>
+	<link rel="stylesheet" href='public/bootstrap.css' type="text/css" media="screen" />
+    <!-- <script language="javascript" type="text/javascript" src='application.js'></script> -->
+    <script language="javascript" type="text/javascript" src='public/jquery-1.7.1.min.js'></script>
+	<script language="javascript" type="text/javascript" src='public/underscore.js'></script>
+	<script language="javascript" type="text/javascript" src='public/backbone.js'></script>
+	<script language="javascript" type="text/javascript" src='public/rhoconnect-web.js'></script>
+	<script language="javascript" type="text/javascript" src='controllers/admins.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/index.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/home.js'></script>	  	
+ 	<script language="javascript" type="text/javascript" src='views/source_docs.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/doc.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/set_adapter.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/server_doc.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/users.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/new_user.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/show_user.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/show_device.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='views/new_ping.js'></script>	
+	<script language="javascript" type="text/javascript" src='views/stats.js'></script> 	
+ 	<script language="javascript" type="text/javascript" src='models/session.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='models/source.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='models/doc.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='models/adapter.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='models/user.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='models/client.js'></script>	  	
+	<script language="javascript" type="text/javascript" src='models/stats.js'></script>
+	<script language="javascript" type="text/javascript" src='public/bootstrap-collapse.js'></script>
+</head>
+<body>
+	<input id='token' type='hidden' value='<%=@token%>'>
+	<input id='domain' type='hidden' value='<%=@domain%>'>
+	<div id='heroku_nav'><%=@heroku%></div>
+	<div id='nav_menu' class="navbar navbar-fixed-top" style="<%@heroku ? 'display:none' : 'display:block'%>"> 
+		  <div class='navbar-inner'>
+			<div class='container'>
+				<div class="brand" style='padding:5px 0 0 0;margin-left:0;font-size:26px'>
+					<img src='public/logo.png' alt='image' height='40' width='40'/>
+					<div style='font-family:Motofont;display:inline-block'>RHO<div style='color:#c91a1d;display:inline'>CONNECT</div></div>
+				</div> 
+				<ul class='nav pull-right' style='margin-top:10px'> 
+				    <li class=""><a href="/resque/" >Resque</a></li>
+				    <li class="active"><a href="#" >Console</a></li> 
+					<li><a href='http://docs.rhomobile.com/rhoconnect/introduction' target='_blank'>Docs</a></li>
+					<li><a id='logout' style='display:none' href="#logout">Logout</a></li>
+					<li><a id='login' href="#">Login</a></li>
+				</ul>
+		     </div><!-- END container -->
+	      </div><!-- END nav inner -->
+	</div><!-- END navbar -->
+		<div class='container'>
+			<!-- secondary nav after login         -->
+			<div id='secondary-nav' class='span12' style='display:none;margin-top:70px;margin-left:0'>
+				<ul class='nav nav-tabs'>
+					<li id='info_home'><a href='#'>Home</a></li>
+					<li id='server_doc'><a href='#docselect'>Server Doc</a></li>
+					<li id='users'><a href='#users'>Users</a></li>
+					<% link = Rhoconnect.stats == true ? '#stats' : '#'%>
+					<% l_klass = Rhoconnect.stats == true ? '' : 'disable_link'%>
+					<li id='stats'><a class='<%=l_klass%>' href='<%=link%>'>Statistics</a></li>
+				</ul>
+			</div>
+			<div class='span12' style='margin-left:0'>
+				<!-- content goes here -->
+				<div id='main_content'>
+				</div>
+				<!-- content ends here -->
+			</div>
+		</div>
+	<!--END row --> 
+	<div class='container'>
+	<hr>
+	<footer>
+		<div class="pull-left">
+			RhoConnect
+			<p>© Rhomobile All rights reserved.</p>
+		</div>
+		<div class="pull-right">
+			RhoConnect v<%=@version%>
+		</div>	
+	</footer>	
+	</div>
+</body>
+</html>

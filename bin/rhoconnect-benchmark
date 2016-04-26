@@ -1,0 +1,264 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+
+$:.unshift File.join(File.dirname(__FILE__),'..','bench','lib')
+$:.unshift File.join(File.dirname(__FILE__),'..','bench')
+require 'forwardable'
+require 'bench'
+require 'optparse'
+
+ENV['RACK_ENV']='production'
+
+RHOCONNECT_PATH = File.join(File.dirname(__FILE__),'..')
+puts "Rhoconnect-Benchmark Script is started at #{Time.now.to_s}"
+
+def parse_options
+  begin 
+    options = {}
+    optparse = OptionParser.new do |opts|
+       # Set a banner, displayed at the top
+       # of the help screen.
+       opts.banner = "Usage: rhoconnect-benchmark [options]"
+
+       options[:server_url] = 'http://localhost:9292'
+       opts.on( '-u', '--url URL', 'Use URL as a server for benchmarking' ) do |url|
+         options[:server_url] = url
+       end
+
+       options[:js_bench] = false
+       opts.on( '-j', '--jsbench', 'Runs Benchmark tests against JavaScript Benchmark Adapter (requires JS App)' ) do
+         options[:js_bench] = true
+       end
+     
+       options[:start_server] = nil
+       opts.on( '-s', '--startserver [APP_PATH]', 'Starts Rhoconnect App Server on localhost and use it for benchmarking' ) do |path|
+         options[:start_server] = path || '.'
+       end
+     
+       options[:num_clients] = 0
+       opts.on( '-C', '--nclients NUMBER', 'Number of concurrent clients to use' ) do |number|
+         options[:num_clients] = number
+       end
+
+       options[:num_iterations] = 10
+       opts.on( '-R', '--niterations NUMBER', 'Number of iterations to run benchmark test on each client (default - 10)' ) do |number|
+         options[:num_iterations] = number
+       end
+
+       options[:payload] = 100
+       opts.on( '-p', '--payload NUMBER', 'Simulate payload (number of records), default - 100 recs (~20K)' ) do |number|
+         options[:payload] = number
+       end
+       
+       options[:max_payload] = 100
+       opts.on( '-x', '--mapayload NUMBER', 'Run the benchmarks test varying the payload from 1 to NUMBER' ) do |number|
+         options[:max_payload] = number
+         options[:payload] = number
+       end
+       
+       options[:max_clients] = 1
+       opts.on( '-m', '--maxclientloops NUMBER', 'Run the benchmarks test varying the number of clients from 1 to NUMBER' ) do |number|
+         options[:max_clients] = number
+         options[:num_clients] = number
+       end
+
+       options[:max_payload] = 0
+       opts.on( '-x', '--mapayload NUMBER', 'Run the benchmarks test varying the payload from 1 to NUMBER' ) do |number|
+         options[:max_payload] = number
+         options[:payload] = number
+       end
+       
+       options[:save_results] = nil
+       options[:title] = 'QUERY'
+       opts.on( '-S', '--save [PATH]', 'Save all benchmark results in to the file structure at PATH') do |path|
+         options[:save_results] = path || '.'
+         options[:title] ||= 'QUERY'
+       end
+
+       opts.on('-t', '--title TITLE', "Name this benchmark's test results with the title TITLE") do |title|
+         options[:title] = title
+       end
+       
+       options[:simtime] = 0
+       opts.on('-S', '--simtime NUMBER', "Force the source adapter to simulate NUMBER seconds communication roundtrip with the backend") do |simtime|
+         options[:simtime] = simtime
+       end
+       
+       opts.on( '-A', '--advanced', 'This convinience option combines -m 10 and -x 500') do
+         options[:max_payload] = 500
+         options[:payload] = 500
+         options[:max_clients] = 10
+         options[:num_clients] = 10
+         options[:title] ||= "QUERY"
+         options[:save_results] = '.'
+         options[:simtime] = 0
+       end
+       
+       options[:distributed] = nil
+       opts.on('-D', '--distributed FNAME', 'Run benchmark test from distributed AWS Cloud Formation using FNAME for options') do |fname|
+         options[:max_payload] = 500
+         options[:payload] = 500
+         options[:max_clients] = 10
+         options[:num_clients] = 10
+         options[:title] ||= "QUERY"
+         options[:save_results] = '.'
+         options[:distributed] = fname
+         options[:simtime] = 0
+       end
+          
+       # This displays the help screen, all programs are
+       # assumed to have this option.
+       opts.on( '-h', '--help', 'Display rhoconnect-benchmark help information' ) do
+         puts opts
+         exit 0
+       end
+     end
+     
+     optparse.parse!
+   rescue SystemExit => se
+     exit 0
+   rescue Exception => e
+     puts " Error while parsing the command line options: #{e.message}"
+     puts ""
+     puts optparse.help
+     puts ""
+     raise ""
+   end
+   
+   options
+end
+
+begin
+  options = parse_options
+  # 1) start up the application - if required
+  # NOTE: server URL will be updated
+  # from the app's settings
+  if options[:start_server] != nil
+    if not Bench.start_rhoconnect_app(options)
+      puts " Cannot start rhoconnect application at path '#{options[:start_server]}'"
+      puts " Exiting..."
+      exit 10
+    end
+  end
+  
+  # 2) Now, parse the server's options
+  Bench.base_url = "#{options[:server_url]}/api/application"
+  Bench.get_test_server
+  Bench.admin_login = 'rhoadmin'
+  Bench.admin_password = ''
+  #
+  if not Bench.check_rc_service(Bench.host)
+    puts ""
+    puts " In order to run benchmark tests - you need to have the Rhoconnect application"
+    puts " up and running on #{options[:server_url]}"
+    puts ""
+    exit 10
+  end
+  
+  # run test in a loop from 1 to max_clients concurrency
+  concurrency_array = []
+  if options[:max_clients].to_i > 1
+    concurrency_array << 1
+    num_loops = 5
+    loop_step = (options[:max_clients].to_f - 1.to_f)/(num_loops - 1)
+    for i in 1..num_loops-2
+      concurrency_array << (1 + i*loop_step + 0.5).to_i 
+    end 
+  end
+  concurrency_array << options[:num_clients].to_i
+  concurrency_array.uniq!
+  
+  # run test in a loop from 1 to max_payload records
+  payload_array = []
+  if options[:max_payload].to_i > 1
+    payload_array << 1
+    num_loops = 10
+    loop_step = (options[:max_payload].to_f - 1.to_f)/(num_loops - 1)
+    for i in 1..num_loops-2
+      payload_array << (1 + i*loop_step + 0.5).to_i 
+    end 
+  end
+  payload_array << options[:payload].to_i
+  payload_array.uniq!
+  
+  # load distributed options and create the AWS Cloud Formation Stack
+  if options[:distributed] != nil
+    puts ""
+    puts " Creating Distributed Clients Benchmark"
+    puts ""
+    require 'bench/aws_utils'
+    require 'bench/distr_runner'
+    Bench::AWSUtils.init_connection(options[:distributed])
+    options[:clients_group] = nil
+    options[:clients_group] = Bench::AWSUtils.create_cf_stack
+    exit 10 unless options[:clients_group] 
+    options[:distr_runner] = Bench::DistrRunner.new options[:clients_group]
+  end
+  
+  # load the save results options
+  result_dir = nil
+  if options[:save_results]
+    result_dir = Bench.prepare_bench_results_dirs(options[:save_results])
+    x_keys = concurrency_array.collect {|t| t.to_s }
+    Bench.prepare_bench_results_meta(result_dir, options[:title], x_keys)
+  end
+
+  # adapter name
+  bench_adapter_name = options[:js_bench] ? "RhoInternalJsBenchAdapter" : "RhoInternalBenchmarkAdapter"
+   
+  concurrency_array.each do |concurrency|
+    payload_array.each do |payload|
+      # initialize default parameters 
+      bench_args = []
+      # Thor's task
+      bench_args[0] = 'start'
+      # script
+      bench_args[1] = 'scripts/test_query_script.rb'
+      # admin
+      bench_args[2] = 'rhoadmin'
+      # admin's password
+      bench_args[3] = ''
+      # server's URL
+      bench_args[4] = Bench.base_url
+      # result fname
+      result_fname = nil
+      result_fname = File.join(result_dir,'raw_data',"bench_result.#{payload}") if result_dir
+      bench_args[5] = result_fname
+      # concurrency
+      bench_args[6] = concurrency
+      # number of iterations
+      bench_args[7] = options[:num_iterations]
+      # datasize
+      bench_args[8] = payload
+      # simulate backend delay
+      bench_args[9] = options[:simtime]
+      # JS Adapter
+      bench_args[10] = bench_adapter_name
+  
+      # now execute Bench
+      if(options[:distributed])
+        sync_key = "#{options[:title]}_#{payload}"
+        options[:distr_runner].run(Bench.base_url, sync_key, payload, concurrency, options[:num_iterations], result_fname, options[:simtime], bench_adapter_name)
+      else
+        Bench::Cli.start bench_args
+      end
+    end
+  end
+  
+  # once finished - post-process results
+  Bench::PostProcessing.execute result_dir
+rescue Exception => e
+  puts e.message
+ensure
+  if options and options[:app_started] == true
+    Bench.stop_rhoconnect_app(options)
+  end
+  
+  if options and options[:clients_group]
+    Bench::AWSUtils.delete_cf_stack(options[:clients_group].stack_name)
+  end 
+end
+
+puts "Rhoconnect-Benchmark Script is finished at #{Time.now.to_s}"
+puts ""

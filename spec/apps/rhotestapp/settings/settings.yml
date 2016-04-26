@@ -1,0 +1,39 @@
+:sources:
+  SampleAdapter:
+    :poll_interval: 300
+    :priority: 1
+  SimpleAdapter:
+    :poll_interval: 600
+    partition_type: 'app'
+  FixedSchemaAdapter:
+    :poll_interval: 300
+    :priority: 5
+    sync_type: 'incremental'
+    belongs_to:
+      - brand: 'SampleAdapter'
+  OtherAdapter:
+    partition_type: 'app'
+    :force_default: true
+    :poll_interval: 300
+  JsSample:
+    :poll_interval: 100
+:development:
+  :bulk_sync_poll_interval: 3600
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/application/
+:test:
+  :iphonecertfile: settings/apple_fake_cert.pem
+  :iphonepassphrase: certpassword
+  :iphoneserver: gateway.sandbox.push.apple.com
+  :iphoneport: 2195
+  :bulk_sync_poll_interval: 3600
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/application/
+  :api_token: b6f22608fa8b4acf84e844808845e2fe
+  :push_server: http://user:pwd@localhost:8675
+  :cookie_expire: 9999999
+  :poll_interval_default: 201
+:production:
+  :bulk_sync_poll_interval: 3600
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/application/

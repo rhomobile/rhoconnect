@@ -1,0 +1,19 @@
+#Sources
+:sources:
+  QueueMockAdapter:
+    :poll_interval: 300
+    queue: abc
+  MockAdapter:
+    :poll_interval: 300
+
+:test:
+  :syncserver: http://localhost:9292/application/
+  :redis: localhost:6379
+  :log_disabled: true
+:development:
+  :syncserver: http://localhost:9292/application/
+  :redis: localhost:6379
+  :log_disabled: true
+:production: 
+  :syncserver: http://localhost:9292/application/
+  :redis: localhost:6379

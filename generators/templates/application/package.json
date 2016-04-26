@@ -1,0 +1,8 @@
+{
+  "name" : "rhoconnect",
+  "version" :"1.0.0",
+  "main": "rhoconnect",
+  "dependencies": {
+    "redis" : "*"
+  }
+}

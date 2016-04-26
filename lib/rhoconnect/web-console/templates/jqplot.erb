@@ -1,0 +1,61 @@
+<!--[if IE]><script language="javascript" type="text/javascript" src="public/jqplot/excanvas.js"></script><![endif]-->
+<script language="javascript" type="text/javascript" src="public/jqplot/jquery.jqplot.min.js"></script>
+<script language="javascript" type="text/javascript" src="public/jqplot/jqplot.categoryAxisRenderer.min.js"></script>
+<script language="javascript" type="text/javascript" src="public/jqplot/jqplot.dateAxisRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="public/jqplot/jqplot.canvasTextRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="public/jqplot/jqplot.canvasAxisLabelRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="public/jqplot/jqplot.canvasAxisTickRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="public/jqplot/jqplot.pointLabels.min.js"></script>
+<script language="javascript" type="text/javascript" src="public/jqplot/jqplot.cursor.js"></script>
+<style type='text/css'>
+	.jqplot-yaxis-label{
+		left:-20px !important;
+	}
+</style>
+
+<% 
+  @sources.uniq!
+  s = nil 
+  if @displayname.nil?
+	s = @sources[0]
+  else
+    @sources.each { |source| s = source if source['name'] == @displayname }
+  end
+%>
+  <% if s.nil? or s['data'].length < 1 %>
+    <center>No data for <b><%= s.nil? ? "" : s['name'] %></b></center><br/><br/>
+  <% else %>
+    <div id="chartdiv" style="height:295px;width:570px; display:none;"></div>
+  <%end%>
+<% 
+def fix_json(instring)
+	outstring = instring.gsub(/"/,"'")
+	outstring = outstring.gsub(/('.*?enderer'):'(.*?)'/,'\1:\2')
+	outstring
+end
+
+%>
+
+
+<script type="text/javascript">
+	var doc = document.getElementById('chartdiv');
+	if(doc){
+		doc.style.display = '';
+		plot = $.jqplot('chartdiv',<%=@sources[0]['data'].to_json.gsub(/"/,"'")%>,<%=fix_json(@sources[0]['options'].to_json)%>);
+		plot.redraw();
+	}
+</script>
+
+
+<br/>
+
+
+
+<% if @keys and @keys.length > 1%>
+	<ul id='source-list' class='nav nav-pills' style='margin-left:35px'>	
+	<% @keys.each do |key| %>
+		<li class="<%=key == @keyname ? 'active' : ''%>">
+			<a class='source_timing_key' style="margin-right:5px" id='<%=@sources[0]['name']%>'><%= key %></a></li>	
+	<% end%>
+	</ul>
+<% end %>

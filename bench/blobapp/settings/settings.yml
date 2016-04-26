@@ -1,0 +1,15 @@
+#Sources
+:sources: 
+  BlobAdapter: 
+    :poll_interval: 300
+ 
+:test: 
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/application/
+:development: 
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/application/
+  :log_disabled: true
+:production: 
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/application/

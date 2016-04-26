@@ -1,0 +1,72 @@
+<h2 id='<%=data[:rand_id].to_s%>'><%="#{data[:rand_id].to_s}. #{data[:title]} - #{data[:description]}"%></h2>
+
+<h3>Request: <%=data[:req_method]%> <%=data[:req_url]+data[:req_query_string]%></h3>
+<table>
+  <thead>
+    <tr>
+      <th>Header</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style='text-align: left;'>Content-Type</td>
+      <td style='text-align: left;'><%=data[:req_content_type]%></td>
+    </tr>
+    <tr>
+      <td style='text-align: left;'>Content-Length</td>
+      <td style='text-align: left;'><%=data[:req_content_length]%></td>
+    </tr>
+    <tr>
+      <td style='text-align: left;'>Cookie</td>
+      <td style='text-align: left;'><%=data[:req_cookie]%></td>
+    </tr>
+  </tbody>
+</table>
+<table>
+  <thead>
+    <tr>
+      <th>Body</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%=data[:req_body]%></td>
+    </tr>
+  </tbody>
+</table>
+<h3>Response: <%=data[:res_status]%></h3>
+<table>
+  <thead>
+    <tr>
+      <th>Header</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style='text-align: left;'>Content-Type</td>
+      <td style='text-align: left;'><%=data[:res_content_type]%></td>
+    </tr>
+    <tr>
+      <td style='text-align: left;'>Content-Length</td>
+      <td style='text-align: left;'><%=data[:res_content_length]%></td>
+    </tr>
+    <tr>
+      <td style='text-align: left;'>Set-Cookie</td>
+      <td style='text-align: left;'><%=data[:res_cookie]%></td>
+    </tr>
+  </tbody>
+</table>
+<table>
+  <thead>
+    <tr>
+      <th>Body</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style='text-align: left;'><%=data[:res_body]%></td>
+    </tr>
+  </tbody>
+</table>

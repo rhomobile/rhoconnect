@@ -1,0 +1,12 @@
+:sources:
+:development:
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/
+:test:
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/
+  # set :node_channel_timeout to 60 secs.
+  :node_channel_timeout: 60
+:production:
+  :redis: localhost:6379
+  :syncserver: http://localhost:9292/
