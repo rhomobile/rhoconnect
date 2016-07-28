@@ -40,8 +40,6 @@ group :test do
   gem 'simplecov', '>= 0.7.1', :require => false
   gem 'simplecov-rcov', '~> 0.2.3'
   gem 'rack-test', '~> 0.6', :require => 'rack/test'
-  gem 'jasmine', :platforms => [:ruby,:jruby]
-  gem 'jasmine-headless-webkit', :platforms => [:ruby,:jruby]
 end
 
 group :build do
