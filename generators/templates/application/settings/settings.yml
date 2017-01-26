@@ -1,6 +1,28 @@
 :sources:
 
 :development:
+  :iphoneserver: gateway.sandbox.push.apple.com
+  :iphoneport: 2195
+  ## Note: example how define Apple push certificate
+  #:iphonecertfile: settings/aps_development_myapp.pem
+  #:iphonepassphrase: store01
+  ## Note: example how define set of Apple certificates when differnet applications use the same RhoConnect server
+  ## In this case each application should be define "rho_app_id" in build.yml
+  ## This is example how define two Apple's certificates for two applications with
+  ## first application rho_app_id = com.tautechnologies.store01
+  ## second application rho_app_id = com.tautechnologies.store02
+  ## you should define rho_app_id without ":" -> "com.tautechnologies.store01" not ":com.tautechnologies.store01"
+  ## if application do not has rho_app_id or you do not defined :iphonecertificates then
+  ##   :iphonecertfile and :iphonepassphrase from root of settings will be used
+  ## for prepare *.pem firstly prepare *.p12 in "Keychain Access" application then use this command for convert to *.pem :
+  ## openssl pkcs12 -in mycert.p12 -out mycert.pem -nodes -clcerts 
+  #:iphonecertificates:
+  #  com.tautechnologies.store01:
+  #      :iphonecertfile: settings/aps_development_store01.pem
+  #      :iphonepassphrase: store01
+  #  com.tautechnologies.store02:
+  #      :iphonecertfile: settings/aps_development_store02.pem
+  #      :iphonepassphrase: store02
   :redis: localhost:6379
   :syncserver: http://localhost:9292
   :push_server: http://someappname@localhost:8675/

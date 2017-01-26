@@ -6,6 +6,8 @@ module Rhoconnect
     field :device_push_type,  :string
     field :device_pin,        :string
     field :device_port,       :string
+    field :device_app_id,       :string
+    field :device_app_version,       :string
     field :phone_id,          :string
     field :user_id,           :string
     field :last_sync,         :datetime
@@ -130,7 +132,7 @@ module Rhoconnect
     end
     
     def update_fields(params)
-      [:device_type, :device_push_type,:device_pin,:device_port,:phone_id].each do |setting|
+      [:device_type, :device_push_type,:device_pin,:device_port,:phone_id, :device_app_id, :device_app_version].each do |setting|
         self.send "#{setting}=".to_sym, params[setting].to_s if params[setting]
       end 
     end

@@ -3,10 +3,32 @@ require 'openssl'
 module Rhoconnect
   class Apple
     def self.ping(params)
+      #puts '$$$ ping params = '+params.to_s
       settings = get_config(Rhoconnect.base_directory)[Rhoconnect.environment]
-      cert_file = File.join(Rhoconnect.base_directory,settings[:iphonecertfile])
+      #puts '$$$ settings = '+settings.to_s
+      cert_file = nil # File.join(Rhoconnect.base_directory,settings[:iphonecertfile])
+      passphrase = nil
+      device_app_id = params[:device_app_id]
+      if device_app_id != nil
+         if  settings[:iphonecertificates] != nil
+            if  settings[:iphonecertificates][device_app_id] != nil
+                cert_file = settings[:iphonecertificates][device_app_id][:iphonecertfile]
+                passphrase = settings[:iphonecertificates][device_app_id][:iphonepassphrase]
+            end
+         end
+      end
+      if cert_file == nil
+          cert_file = settings[:iphonecertfile]
+      end
+      if passphrase == nil
+          passphrase = settings[:iphonepassphrase]
+      end
+
+      #puts '$$$ cert_file = '+cert_file.to_s
+      cert_file = File.join(Rhoconnect.base_directory,cert_file)
+
       cert = File.read(cert_file) if File.exists?(cert_file)
-    	passphrase = settings[:iphonepassphrase]
+
     	host = settings[:iphoneserver]
     	port = settings[:iphoneport]
       if(cert and host and port)

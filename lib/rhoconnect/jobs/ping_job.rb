@@ -35,9 +35,11 @@ module Rhoconnect
         clients.members.each do |client_id|
           client = Client.load(client_id,{:source_name => '*'})
           params.merge!(
-            'device_port' => client.device_port, 
-            'device_pin' => client.device_pin, 
-            'phone_id' => client.phone_id
+            'device_port' => client.device_port,
+            'device_pin' => client.device_pin,
+            'phone_id' => client.phone_id,
+            'device_app_id' => client.device_app_id,
+            'device_app_version' => client.device_app_version
           )
           send_push = false
           if client.device_type and client.device_type.size > 0
