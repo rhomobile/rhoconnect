@@ -3,7 +3,7 @@ require 'openssl'
 module Rhoconnect
   class Apple
     def self.ping(params)
-      #puts '$$$ ping params = '+params.to_s
+      #log '$$$ ping params = '+params.to_s
       settings = get_config(Rhoconnect.base_directory)[Rhoconnect.environment]
       #puts '$$$ settings = '+settings.to_s
       cert_file = nil # File.join(Rhoconnect.base_directory,settings[:iphonecertfile])
