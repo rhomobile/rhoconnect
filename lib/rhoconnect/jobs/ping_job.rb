@@ -32,8 +32,13 @@ module Rhoconnect
       user = User.load(user_id)
       clients = user.clients if user
       if clients
-        clients.members.reverse_each do |client_id|
-          client = Client.load(client_id,{:source_name => '*'})
+        client_objects = []
+        clients.members.each do |client_id|
+            client_obj = Client.load(client_id,{:source_name => '*'})
+            client_objects << client_obj
+        end
+        sorted_clients = client_objects.sort! { |a,b|  a.last_sync <=> b.last_sync }
+        sorted_clients.reverse_each do |client|
           params.merge!(
             'device_port' => client.device_port,
             'device_pin' => client.device_pin,
@@ -58,7 +63,7 @@ module Rhoconnect
                 send_push = true
               end
             else
-              log "Skipping ping for non-registered client_id '#{client_id}'..."
+              log "Skipping ping for non-registered client_id '#{client.rho__id.to_s}'..."
               next
             end
             if send_push
@@ -78,10 +83,10 @@ module Rhoconnect
                 end
               end
             else
-              log "Dropping ping request for client_id '#{client_id}' because it's already in user's device pin or phone_id list."
+              log "Dropping ping request for client_id '#{client.rho__id.to_s}' because it's already in user's device pin or phone_id list."
             end
           else
-            log "Skipping ping for non-registered client_id '#{client_id}'..."
+            log "Skipping ping for non-registered client_id '#{client.rho__id.to_s}'..."
           end
         end
       else
