@@ -44,8 +44,12 @@ module Rhoconnect
           send_push = false
           if client.device_type and client.device_type.size > 0
             if client.phone_id and client.phone_id.size > 0
-              unless phone_ids.include? client.phone_id   
-                phone_ids << client.phone_id
+              combined_phone_id = client.phone_id
+              if client.device_app_id and client.device_app_id.size > 0
+                  combined_phone_id = combined_phone_id + client.device_app_id
+              end
+              unless phone_ids.include? combined_phone_id
+                phone_ids << combined_phone_id
                 send_push = true
               end
             elsif client.device_pin and client.device_pin.size > 0
