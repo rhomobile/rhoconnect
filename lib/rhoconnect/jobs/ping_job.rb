@@ -32,7 +32,7 @@ module Rhoconnect
       user = User.load(user_id)
       clients = user.clients if user
       if clients
-        clients.members.each do |client_id|
+        clients.members.reverse_each do |client_id|
           client = Client.load(client_id,{:source_name => '*'})
           params.merge!(
             'device_port' => client.device_port,
