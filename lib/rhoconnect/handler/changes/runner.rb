@@ -45,13 +45,17 @@ module Rhoconnect
         end
         
         def _process_blobs(params)
+          #puts "$$$ runner:_process_blobs params = [#{params}]"
           unless params[:blob_fields].nil?
             [:create,:update].each do |utype|
               objects = params[utype] || {}
               objects.each do |id,obj|
                 params[:blob_fields].each do |field|
                   blob = params["#{field}-#{id}"]
-                  obj[field] = @model.store_blob(obj,field,blob)
+                  if blob != nil
+                    # skip unchanged fields (some items can not have changed blob property - only non-blob or another blob etc.)
+                    obj[field] = @model.store_blob(obj,field,blob)
+                  end
                 end
               end
             end
