@@ -60,6 +60,15 @@ module Rhoconnect
               @client.flush_data(:delete_page)
               _delete_errors_page
               return true
+            else
+                if token == nil
+                    # client lost state - may be previous connection was failed etc.
+                    # we ned reinit connection
+                    puts "$$$ ERROR: receive NIL token => reset saved session connection. client["+@client.to_s+"] stored token["+stored_token.to_s+"]"
+                    @client.put_value(:page_token,nil)
+                    _delete_errors_page
+                    return true
+                end
             end
           else
             return true    
