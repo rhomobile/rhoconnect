@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
   s.add_dependency('json', '~> 1.8')
   s.add_dependency('rubyzip', '~> 1.1')
   s.add_dependency('connection_pool', '~> 1.2.0')
-  s.add_dependency('redis', '>= 3.0.1')
+  s.add_dependency('redis', '~> 3.3.5')
   s.add_dependency('resque', '>= 1.22.0')
   s.add_dependency('rest-client', '~> 1.6.1')
   s.add_dependency('thor', '~> 0.18.0')
