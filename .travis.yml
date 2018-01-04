@@ -9,4 +9,4 @@ install:
 - bundle install
 
 script:
-- rake
+- bundle exec rake
