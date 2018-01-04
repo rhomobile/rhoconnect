@@ -48,6 +48,6 @@ Gem::Specification.new do |s|
   s.add_dependency('connection_pool', '~> 1.2.0')
   s.add_dependency('redis', '~> 3.3.5')
   s.add_dependency('resque', '>= 1.22.0')
-  s.add_dependency('rest-client', '~> 1.6.1')
+  s.add_dependency('rest-client', '~> 2.0.2')
   s.add_dependency('thor', '~> 0.18.0')
 end
