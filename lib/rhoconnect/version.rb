@@ -1,3 +1,3 @@
 module Rhoconnect
-  VERSION = '5.5.0'
+  VERSION = '6.1.0'
 end
