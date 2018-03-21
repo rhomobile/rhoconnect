@@ -12,6 +12,8 @@ describe "RhoconnectApiGetClientParams" do
       {"name"=>"device_pin", "value"=>"abcd", "type"=>"string"},
       {"name"=>"device_port", "value"=>"3333", "type"=>"string"},
       {"name"=>"device_push_type", "type"=>"string", "value"=>nil},
+      {"name"=>"device_app_id", "type"=>"string", "value"=>nil},
+      {"name"=>"device_app_version", "type"=>"string", "value"=>nil},
       {"name"=>"user_id", "value"=>"testuser", "type"=>"string"},
       {"name"=>"phone_id", "value"=>nil, "type"=>"string"},
       {"name"=>"app_id", "value"=>"application", "type"=>"string"}].sort{|x,y| x['name']<=>y['name']}
