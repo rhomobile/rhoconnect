@@ -10,5 +10,4 @@ install:
 - npm install
 
 script:
-#- bundle exec rake spec:all
-- bundle exec rspec spec/api/source/update_source_params_spec.rb 
+- bundle exec rake spec:all
