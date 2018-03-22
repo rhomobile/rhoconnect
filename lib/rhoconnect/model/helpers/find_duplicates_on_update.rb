@@ -37,7 +37,7 @@ module Rhoconnect
 	                		  invalid_meta[index] ||= {}
 	                		  invalid_meta[index][source_id] ||= {}
 	                		  invalid_meta[index][source_id][objindex] ||= {}
-	                		  invalid_meta[index][source_id][objindex][:error] = "Error during #{operation}: object confict detected"
+	                		  invalid_meta[index][source_id][objindex][:error] = "Error during #{operation}: object conflict detected"
 	                	  else
 		                    invalid_meta[index] ||= {}
 		                    invalid_meta[index][source_id] ||= {}

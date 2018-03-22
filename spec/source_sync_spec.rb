@@ -578,7 +578,7 @@ describe "SourceSync" do
       set_source_queue_state(@s, {@create_queue_name => [[@s.name, [['5', { 'name' => 'Android', 'link' => '1', 'force_duplicate_error' => '1' }]]]]},@c.id,true)
       @sscud.do_cud
       verify_source_queue_data(@s, @create_queue_name => [])
-      verify_doc_result(@c, :create_errors => {"5-error"=>{"message"=>"Error during create: object confict detected"}, "5"=>{"name"=>"Android", "link"=>"1", 'force_duplicate_error' => '1'}} )
+      verify_doc_result(@c, :create_errors => {"5-error"=>{"message"=>"Error during create: object conflict detected"}, "5"=>{"name"=>"Android", "link"=>"1", 'force_duplicate_error' => '1'}} )
     end
 
     it "should detect create conflict in the intermediate state create and skip the duplicate record create" do
@@ -609,7 +609,7 @@ describe "SourceSync" do
       @sscud.do_cud
 
       verify_source_queue_data(@s, @update_queue_name => [])
-      verify_doc_result(@c, :update_errors => {"4-error"=>{"message"=>"Error during update: object confict detected"}, "4"=>{"name"=>"ErrorName", 'force_duplicate_error' => '1'}})
+      verify_doc_result(@c, :update_errors => {"4-error"=>{"message"=>"Error during update: object conflict detected"}, "4"=>{"name"=>"ErrorName", 'force_duplicate_error' => '1'}})
       verify_doc_result(@c, :update_rollback => {'4'=> {'name' => 'Apple'}})
     end
 
@@ -644,7 +644,7 @@ describe "SourceSync" do
       @sscud.do_cud
 
       verify_source_queue_data(@s, @update_queue_name => [])
-      verify_doc_result(@c, :update_errors => {"4-error"=>{"message"=>"Error during update: object confict detected"}, "4"=>{"name"=>"ErrorName", 'force_duplicate_error' => '1'}})
+      verify_doc_result(@c, :update_errors => {"4-error"=>{"message"=>"Error during update: object conflict detected"}, "4"=>{"name"=>"ErrorName", 'force_duplicate_error' => '1'}})
       verify_doc_result(@c, :update_rollback => {'4'=> {'name' => 'Apple'}})
     end
 
@@ -704,7 +704,7 @@ describe "SourceSync" do
       @sscud.do_cud
 
       verify_source_queue_data(@s, @delete_queue_name => [])
-      verify_doc_result(@c, :delete_errors => {"4-error"=>{"message"=>"Error during delete: object confict detected"}, "4"=>{"name"=>"Apple", 'force_duplicate_error' => '1'}})
+      verify_doc_result(@c, :delete_errors => {"4-error"=>{"message"=>"Error during delete: object conflict detected"}, "4"=>{"name"=>"Apple", 'force_duplicate_error' => '1'}})
     end
   end
 

@@ -40,7 +40,7 @@ class SampleAdapter < SourceAdapter
             invalid_meta[index] ||= {}
             invalid_meta[index][source_id] ||= {}
             invalid_meta[index][source_id][objindex] ||= {}
-            invalid_meta[index][source_id][objindex][:error] = "Error during #{operation}: object confict detected"
+            invalid_meta[index][source_id][objindex][:error] = "Error during #{operation}: object conflict detected"
           end
           if objvalue['duplicate_of_cid']
             invalid_meta[index] ||= {}
