@@ -12,7 +12,7 @@ describe "ClientSync" do
     @model = Rhoconnect::Model::Base.create(@s2)
     @cs1 = Rhoconnect::Handler::Changes::Runner.new(['create'],@model,@c,lv,params)
     stub_request(:post, "http://test.com/rhoconnect/authenticate")
-    stub_request(:post, "http://test.com/rhoconnect/create").with(:headers => {'Content-Type' => 'application/json'}).to_return(:body => {:id => 5})
+    stub_request(:post, "http://test.com/rhoconnect/create").with(:headers => {'Content-Type' => 'application/json'}).to_return(:body => {:id => 5}.to_json)
     @cs1.run
     verify_source_queue_data(@s2, {:create => [],
                         :update => [],
@@ -492,10 +492,10 @@ describe "ClientSync" do
       @sync_handler.run
       token = @c.get_value(:page_token)
       @sync_handler.run.should == [{'version'=>Rhoconnect::SYNC_VERSION},{"token"=>token},
-        {"count"=>1}, {"progress_count"=>0},{"total_count"=>1},{'insert' => expected}]
+                                   {"count"=>1}, {"progress_count"=>0},{"total_count"=>1},{'insert' => expected}]
       @sync_handler.params[:token] = token
       @sync_handler.run.should == [{'version'=>Rhoconnect::SYNC_VERSION},{"token"=>""},
-        {"count"=>0}, {"progress_count"=>0}, {"total_count"=>1}, {}]
+                                   {"count"=>0}, {"progress_count"=>0}, {"total_count"=>1}, {}]
       @sync_handler.client.get_data(:page).should == {}
       @c.get_value(:page_token).should be_nil
     end
