@@ -10,5 +10,4 @@ install:
 - npm install
 
 script:
-- rake spec:all
-#- bundle exec rake
+- bundle exec rake spec:all
