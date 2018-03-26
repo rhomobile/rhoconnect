@@ -14,7 +14,7 @@ if not defined?(JRUBY_VERSION)
   require 'eventmachine'
   require 'fiber'
 
-  Thread.abort_on_exception = true
+  Thread.abort_on_exception = false
 
   module RSpec
     module Core
