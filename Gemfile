@@ -30,6 +30,7 @@ group :development do
   gem 'aws-s3', '>= 0.6.2', :require => 'aws/s3'
   gem 'sqlite3', ">= 1.3.3", :platforms => [:ruby, :mswin, :mingw]
   gem "excon", "~> 0.22.1"
+  gem "net-ssh", "~> 4.2.0"
   gem "fog", "~> 1.11.1"
   gem 'ffaker', '~> 1.14.0'
   gem 'webmock', '~> 1.9.0'
