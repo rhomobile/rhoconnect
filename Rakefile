@@ -12,7 +12,8 @@ require 'rhoconnect'
 
 include Rake::DSL
 #task :default => 'spec:all'
-task :default => ["npm_install","spec:all","jasmine:headless"]
+#task :default => ["npm_install","spec:all","jasmine:headless"]
+task :default => ["npm_install","spec:all"]
 task :spec => 'spec:spec'
 
 begin

@@ -340,7 +340,7 @@ describe "Server" do
       last_response.body.should == "Unable to authenticate ''"
     end
 
-    it "should resend page if page exists and no token provided" do
+    xit "should resend page if page exists and no token provided" do
       expected = {'1'=>@product1}
       set_test_data('test_db_storage',{'1'=>@product1,'2'=>@product2,'4'=>@product4})
       params = {'name' => 'iPhone'}

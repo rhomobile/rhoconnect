@@ -33,7 +33,7 @@ group :development do
   gem "net-ssh", "~> 4.2.0"
   gem "fog", "~> 1.11.1"
   gem 'ffaker', '~> 1.14.0'
-  gem 'webmock', '~> 1.9.0'
+  gem 'webmock', '~> 3.4.2'
 end
 
 group :test do
@@ -41,10 +41,10 @@ group :test do
   gem 'simplecov', '>= 0.7.1', :require => false
   gem 'simplecov-rcov', '~> 0.2.3'
   gem 'rack-test', '~> 0.6', :require => 'rack/test'
-  gem 'jasmine', :platforms => [:ruby,:jruby]
-  gem 'jasmine-headless-webkit', '~> 0.8.4', :platforms => [:ruby,:jruby]
+  #gem 'jasmine', :platforms => [:ruby,:jruby]
+  #gem 'jasmine-headless-webkit', '~> 0.8.4', :platforms => [:ruby,:jruby]
 end
 
 group :build do
-  gem 'fpm', '>= 0.4.26'
+  gem 'fpm', '>= 0.4.42'
 end

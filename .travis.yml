@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-- ruby-2.1.0
+- 2.1.0
 - 2.3.3
 - 2.5.1
 
@@ -13,7 +13,7 @@ install:
 - npm install
 
 script:
-- bundle exec rake spec:all
+- bundle exec rake
 
 services:
   - redis-server
