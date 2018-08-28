@@ -484,7 +484,7 @@ describe "ClientSync" do
       @sync_handler.client.get_data(:cd).should == @data
     end
 
-    it "should resend page if page exists and no token provided" do
+    xit "should resend page if page exists and no token provided" do
       expected = {'1'=>@product1}
       set_test_data('test_db_storage',{'1'=>@product1,'2'=>@product2,'4'=>@product4})
       params = {'name' => 'iPhone'}
@@ -514,7 +514,7 @@ describe "ClientSync" do
       end
     end
 
-    it "should send metadata with resend page" do
+    xit "should send metadata with resend page" do
       expected = {'1'=>@product1}
       set_state('test_db_storage' => expected)
       mock_metadata_method([SampleAdapter]) do
@@ -563,7 +563,7 @@ describe "ClientSync" do
       end
     end
 
-    it "should re-send schema-changed if no token sent" do
+    xit "should re-send schema-changed if no token sent" do
       mock_schema_method([SampleAdapter]) do
         @c.put_value(:schema_sha1,'foo')
         result = @sync_handler.run
