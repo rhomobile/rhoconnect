@@ -46,5 +46,5 @@ group :test do
 end
 
 group :build do
-  gem 'fpm', '>= 0.4.26'
+  gem 'fpm', '>= 0.4.42'
 end
