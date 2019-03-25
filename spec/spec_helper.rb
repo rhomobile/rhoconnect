@@ -143,7 +143,7 @@ module TestHelpers
   end
 
   def setup_post_yield(response)
-    RestClient.stub(:post).and_yield(response, nil, nil)
+    allow(RestClient).to receive(:post).and_yield(response, nil, nil)
   end
 
   def set_state(state,append=false)

@@ -9,22 +9,22 @@ describe "Ping Apple" do
       "vibrate" => '5', "badge" => '5', "sound" => 'hello.mp3',
       "device_pin" => @c.device_pin, "device_port" => @c.device_port}
     ssl_ctx = double("ssl_ctx")
-    ssl_ctx.stub(:key=).and_return('key')
-    ssl_ctx.stub(:cert=).and_return('cert')
-    OpenSSL::SSL::SSLContext.stub(:new).and_return(ssl_ctx)
-    OpenSSL::PKey::RSA.stub(:new)
-    OpenSSL::X509::Certificate.stub(:new)
+    allow(ssl_ctx).to receive(:key=).and_return('key')
+    allow(ssl_ctx).to receive(:cert=).and_return('cert')
+    allow(OpenSSL::SSL::SSLContext).to receive(:new).and_return(ssl_ctx)
+    allow(OpenSSL::PKey::RSA).to receive(:new)
+    allow(OpenSSL::X509::Certificate).to receive(:new)
 
     tcp_socket = double("tcp_socket")
-    tcp_socket.stub(:close)
-    TCPSocket.stub(:new).and_return(tcp_socket)
+    allow(tcp_socket).to receive(:close)
+    allow(TCPSocket).to receive(:new).and_return(tcp_socket)
 
     @ssl_socket = double("ssl_socket")
-    @ssl_socket.stub(:sync=)
-    @ssl_socket.stub(:connect)
-    @ssl_socket.stub(:write)
-    @ssl_socket.stub(:close)
-    OpenSSL::SSL::SSLSocket.stub(:new).and_return(@ssl_socket)
+    allow(@ssl_socket).to receive(:sync=)
+    allow(@ssl_socket).to receive(:connect)
+    allow(@ssl_socket).to receive(:write)
+    allow(@ssl_socket).to receive(:close)
+    allow(OpenSSL::SSL::SSLSocket).to receive(:new).and_return(@ssl_socket)
   end
 
   # TODO: This should really test SSLSocket.write
@@ -33,9 +33,7 @@ describe "Ping Apple" do
   end
 
   it "should log deprecation on iphone ping" do
-    Iphone.should_receive(
-      :log
-    ).once.with("DEPRECATION WARNING: 'iphone' is a deprecated device_type, use 'apple' instead")
+    expect(Iphone).to receive(:log).once.with("DEPRECATION WARNING: 'iphone' is a deprecated device_type, use 'apple' instead")
     Iphone.ping(@params)
   end
 
@@ -45,8 +43,8 @@ describe "Ping Apple" do
       "do_sync"=>["SampleAdapter"]
     }
     apn_message = Apple.apn_message(@params)
-    apn_message[0, 7].inspect.gsub("\"", "").should == "\\x00\\x00 \\xAB\\xCD\\x00g"
-    JSON.parse(apn_message[7, apn_message.length]).should ==  expected_hash
+    expect(apn_message[0, 7].inspect.gsub("\"", "")).to  eq("\\x00\\x00 \\xAB\\xCD\\x00g")
+    expect(JSON.parse(apn_message[7, apn_message.length])).to eq(expected_hash)
   end
 
   it "should compute apn_message with source array" do
@@ -56,21 +54,21 @@ describe "Ping Apple" do
       "do_sync"=>["SampleAdapter", "SimpleAdapter"]
     }
     apn_message = Apple.apn_message(@params)
-    apn_message[0, 7].inspect.gsub("\"", "").should == "\\x00\\x00 \\xAB\\xCD\\x00w"
-    JSON.parse(apn_message[7, apn_message.length]).should ==  expected_hash
+    expect(apn_message[0, 7].inspect.gsub("\"", "")).to eq("\\x00\\x00 \\xAB\\xCD\\x00w")
+    expect(JSON.parse(apn_message[7, apn_message.length])).to eq(expected_hash)
   end
 
   it "should raise SocketError if socket fails" do
     error = 'socket error'
-    @ssl_socket.stub(:write).and_return { raise SocketError.new(error) }
-    Apple.should_receive(:log).once.with("Error while sending ping: #{error}")
-    lambda { Apple.ping(@params) }.should raise_error(SocketError,error)
+    allow(@ssl_socket).to receive(:write).and_raise(SocketError.new(error))
+    expect(Apple).to receive(:log).once.with("Error while sending ping: #{error}")
+    expect(lambda { Apple.ping(@params) }).to raise_error(SocketError, error)
   end
 
   it "should do nothing if no cert or host or port" do
-     Rhoconnect::Apple.stub(:get_config).and_return({:test => {:iphonecertfile=>"none"}})
-     Rhoconnect::Apple.should_receive(:get_config).once
-     OpenSSL::SSL::SSLContext.should_receive(:new).exactly(0).times
+     allow(Rhoconnect::Apple).to receive(:get_config).and_return({:test => {:iphonecertfile=>"none"}})
+     expect(Rhoconnect::Apple).to receive(:get_config).once
+     expect(OpenSSL::SSL::SSLContext).to receive(:new).exactly(0).times
      Apple.ping(@params)
   end
 end
