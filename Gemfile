@@ -27,24 +27,24 @@ end
 
 group :development do
   # gem 'debugger'
-  gem 'aws-s3', '>= 0.6.2', :require => 'aws/s3'
-  gem 'sqlite3', ">= 1.3.3", :platforms => [:ruby, :mswin, :mingw]
-  gem "excon", "~> 0.22.1"
-  gem "net-ssh", "~> 4.2.0"
-  gem "fog", "~> 1.11.1"
-  gem 'ffaker', '~> 1.14.0'
-  gem 'webmock', '~> 3.4.2'
+  gem 'aws-s3', '>= 0.6.3', :require => 'aws/s3'
+  gem 'sqlite3', ">= 1.4.0", :platforms => [:ruby, :mswin, :mingw]
+  gem "excon", "~> 0.62.0"
+  gem "net-ssh", "~> 5.2.0"
+  gem "fog-aws", "~> 3.4.0"
+  gem 'ffaker', '~> 2.10.0'
+  gem 'webmock', '~> 3.5.1'
 end
 
 group :test do
-  gem 'rspec', '~> 2.14.0'
-  gem 'simplecov', '>= 0.7.1', :require => false
+  gem 'rspec', '~> 3.8.0'
+  gem 'simplecov', '>= 0.16.1', :require => false
   gem 'simplecov-rcov', '~> 0.2.3'
-  gem 'rack-test', '~> 0.6', :require => 'rack/test'
+  gem 'rack-test', '~> 1.1.0', :require => 'rack/test'
   #gem 'jasmine', :platforms => [:ruby,:jruby]
   #gem 'jasmine-headless-webkit', '~> 0.8.4', :platforms => [:ruby,:jruby]
 end
 
 group :build do
-  gem 'fpm', '>= 0.4.42'
+  gem 'fpm', '>= 1.11.00'
 end
