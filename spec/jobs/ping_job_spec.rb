@@ -223,8 +223,9 @@ describe 'PingJob' do
     scrubbed_params['vibrate'] = '5'
     @c1.device_push_type = 'Gcm'
 
-    Apple.should_receive(:ping).with(params.merge!({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port})).and_return {raise SocketError.new("Socket failure")}
-    Gcm.should_receive(:ping).with({'device_pin' => @c1.device_pin, 'device_port' => @c1.device_port}.merge!(scrubbed_params))
+    params.merge!({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port})
+    allow(Apple).to receive(:ping).with(params).and_raise(SocketError.new("Socket failure"))
+    allow(Gcm).to receive(:ping).with({'device_pin' => @c1.device_pin, 'device_port' => @c1.device_port}.merge!(scrubbed_params))
     exception_raised = false
     begin
       PingJob.perform(params)
