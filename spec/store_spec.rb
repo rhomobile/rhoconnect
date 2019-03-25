@@ -75,7 +75,7 @@ describe "Store" do
       Store.update_count('mydata', -5)
       Store.get_value('mydata').to_i.should == 16
       Store.delete_value('mydata')
-      Store.exists?('mydata').should be_false
+      Store.exists?('mydata').should be false
     end
 
     it "should delete_objects with simple data and verify that srem is called only on affected fields" do
@@ -345,8 +345,8 @@ describe "Store" do
 
     it "should not fail to rename if key doesn't exist" do
       Store.rename('key1','key2')
-      Store.exists?('key1').should be_false
-      Store.exists?('key2').should be_false
+      Store.exists?('key1').should be false
+      Store.exists?('key2').should be false
     end
 
     it "should raise ArgumentError on put_data with invalid data" do
@@ -366,9 +366,9 @@ describe "Store" do
       Store.put_object(:md, key1, data1)
       Store.put_object(:md, key2, data2)
       Store.keys(:md).should == []
-      Store.exists?("#{:md}:#{docindex1}").should be_true
-      Store.exists?("#{:md}:#{docindex2}").should be_true
-      Store.exists?("#{:md}:indices").should be_true
+      Store.exists?("#{:md}:#{docindex1}").should be  true
+      Store.exists?("#{:md}:#{docindex2}").should be  true
+      Store.exists?("#{:md}:indices").should be  true
       Store.get_store(0).db.hkeys("#{:md}:indices").should == ["#{docindex1}", "#{docindex2}"]
       Store.get_store(0).db.hvals("#{:md}:indices").should == ["#{:md}:#{docindex1}", "#{:md}:#{docindex2}"]
     end
@@ -396,20 +396,20 @@ describe "Store" do
       Store.put_tmp_data(:md, {key1 => data1})
       Store.put_tmp_data(:md, {key2 => data2}, true)
 
-      Store.exists?("#{:md}:#{docindex1}").should be_true
-      Store.exists?("#{:md}:#{docindex2}").should be_true
-      Store.exists?("#{:md}:indices").should be_true
+      Store.exists?("#{:md}:#{docindex1}").should be  true
+      Store.exists?("#{:md}:#{docindex2}").should be  true
+      Store.exists?("#{:md}:indices").should be  true
       Store.get_store(0).db.ttl("#{:md}:#{docindex1}").should == Rhoconnect.store_key_ttl
       Store.get_store(0).db.ttl("#{:md}:#{docindex2}").should == Rhoconnect.store_key_ttl
       Store.get_store(0).db.ttl("#{:md}:indices").should == Rhoconnect.store_key_ttl
 
       Store.rename_tmp_data(:md, :md_perm)
-      Store.exists?("#{:md}:#{docindex1}").should be_false
-      Store.exists?("#{:md}:#{docindex2}").should be_false
-      Store.exists?("#{:md}:indices").should be_false
-      Store.exists?("#{:md_perm}:#{docindex1}").should be_true
-      Store.exists?("#{:md_perm}:#{docindex2}").should be_true
-      Store.exists?("#{:md_perm}:indices").should be_true
+      Store.exists?("#{:md}:#{docindex1}").should be false
+      Store.exists?("#{:md}:#{docindex2}").should be false
+      Store.exists?("#{:md}:indices").should be false
+      Store.exists?("#{:md_perm}:#{docindex1}").should be  true
+      Store.exists?("#{:md_perm}:#{docindex2}").should be  true
+      Store.exists?("#{:md_perm}:indices").should be  true
       Store.get_store(0).db.ttl("#{:md_perm}:#{docindex1}").should == -1
       Store.get_store(0).db.ttl("#{:md_perm}:#{docindex2}").should == -1
       Store.get_store(0).db.ttl("#{:md_perm}:indices").should == -1

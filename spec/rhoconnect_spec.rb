@@ -22,7 +22,7 @@ describe "Rhoconnect" do
     Rhoconnect.environment.should == :test
     Rhoconnect.stats.should == false
     Rhoconnect.cookie_expire.should == 9999999
-    App.is_exist?(test_app_name).should be_true
+    App.is_exist?(test_app_name).should be  true
   end
 
   it "should bootstrap Rhoconnect with RHO_ENV provided" do
