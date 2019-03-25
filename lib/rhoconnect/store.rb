@@ -879,7 +879,7 @@ module Rhoconnect
         Rhoconnect.redis_url = url
         ConnectionPool::Wrapper.new(:size => Rhoconnect.connection_pool_size,
                                     :timeout => Rhoconnect.connection_pool_timeout) do
-          Redis.connect(:url => url, :timeout => Rhoconnect.redis_timeout, :thread_safe => true)
+          Redis.new(:url => url, :timeout => Rhoconnect.redis_timeout, :thread_safe => true)
         end
       elsif server and server.is_a?(String)
         Rhoconnect.redis_url = "redis://#{server}"
@@ -901,7 +901,7 @@ module Rhoconnect
       else
         Rhoconnect.redis_url = "redis://localhost:6379"
         ConnectionPool::Wrapper.new(:size => 5, :timeout => 30) do
-          Redis.connect(:timeout => 30, :thread_safe => true)
+          Redis.new(:timeout => 30, :thread_safe => true)
         end
       end
     end
