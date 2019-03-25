@@ -887,7 +887,7 @@ module Rhoconnect
         ConnectionPool::Wrapper.new(:size => Rhoconnect.connection_pool_size,
                                     :timeout => Rhoconnect.connection_pool_timeout) do
           host = '127.0.0.1' if host == 'localhost'
-          Redis.connect(
+          Redis.new(
             :thread_safe => true,
             :host => host,
             :port => port,
