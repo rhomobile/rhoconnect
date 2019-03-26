@@ -5,22 +5,22 @@ describe "Store" do
 
   describe "store methods" do
     it "should create proper connection class" do
-      Store.get_store(0).db.class.name.should match(/Redis/)
+      expect(Store.get_store(0).db.class.name).to match(/Redis/)
     end
 
     it "should create redis connection based on ENV" do
       ENV[REDIS_URL] = 'redis://localhost:6379'
-      Redis.should_receive(:connect).with(:url => 'redis://localhost:6379', :thread_safe => true, :timeout => Rhoconnect.redis_timeout).exactly(5).times.and_return { Redis.new }
+      expect(Redis).to receive(:new).with(:url => 'redis://localhost:6379', :thread_safe => true, :timeout => Rhoconnect.redis_timeout).exactly(1).times.and_call_original
       Store.nullify
-      Store.num_stores.should == 0
+      expect(Store.num_stores).to eq(0)
       Store.create
-      Store.get_store(0).db.should_not == nil
+      expect(Store.get_store(0).db).not_to be_nil
       ENV.delete(REDIS_URL)
     end
 
     it "should create redis connection based on REDISTOGO_URL ENV" do
       ENV[REDISTOGO_URL] = 'redis://localhost:6379'
-      Redis.should_receive(:connect).with(:url => 'redis://localhost:6379', :thread_safe => true, :timeout => Rhoconnect.redis_timeout).exactly(5).times.and_return { Redis.new }
+      expect(Redis).to receive(:new).with(:url => 'redis://localhost:6379', :thread_safe => true, :timeout => Rhoconnect.redis_timeout).exactly(1).and_call_original
       Store.nullify
       Store.create
       Store.get_store(0).db.should_not == nil
@@ -288,7 +288,7 @@ describe "Store" do
       doc = "locked_data"
       lock = Time.now.to_i+3
       Store.get_store(0).db.set "lock:#{doc}", lock
-      Store.get_store(0).should_receive(:sleep).at_least(:once).with(1).and_return { sleep 1; Store.release_lock(doc,lock); }
+      expect(Store.get_store(0)).to receive(:sleep).at_least(:once).with(1) { sleep 1; Store.release_lock(doc,lock); }
       Store.get_lock(doc,4)
     end
 
@@ -318,7 +318,7 @@ describe "Store" do
       doc = "locked_data"
       Rhoconnect.lock_duration = 2
      	Store.get_lock(doc)
-     	Store.get_store(0).should_receive(:sleep).at_least(1).times.with(1).and_return { sleep 1 }
+     	expect(Store.get_store(0)).to receive(:sleep).at_least(1).times.with(1) { sleep 1 }
       Store.get_lock(doc)
      	Rhoconnect.lock_duration = nil
     end

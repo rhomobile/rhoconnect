@@ -90,8 +90,8 @@ describe "User" do
 
   describe "User Stats" do
 
-    before(:all) do
-      Store.stub(:lock).and_yield
+    before(:each) do
+      allow(Store).to receive(:lock).and_yield
     end
 
     it "should increment user stats on create" do
