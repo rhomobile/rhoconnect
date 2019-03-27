@@ -13,7 +13,7 @@ platforms :ruby, :mingw  do
 # for async framework
 # for Async, Eventful execution
   gem 'rack-fiber_pool'
-  gem 'async-rack', :git => 'git@github.com:tauplatform/async-rack.git'
+  gem 'async-rack', :git => 'https://github.com/tauplatform/async-rack.git'
 end
 
 platforms :jruby do
