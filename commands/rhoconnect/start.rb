@@ -19,6 +19,7 @@ Execute.define_task do
     settings = config(options[:config])
 
     port = (params[:port]) ? params[:port] : URI.parse(settings[:syncserver]).port
+    host = (params[:host]) ? params[:host] : URI.parse(settings[:syncserver]).host
 
     redis_url = (params[:redis]) ? params[:redis] : settings[:redis]
     redis_url = [redis_url] if redis_url.is_a?(String)
@@ -63,17 +64,17 @@ Execute.define_task do
 
     if jruby?
       puts 'Starting rhoconnect in jruby environment...'
-      system(env, "#{command} --port #{port} -P #{rhoconnect_pid} #{rackup_config}")
+      system(env, "#{command} --host #{host} --port #{port} -P #{rhoconnect_pid} #{rackup_config}")
     elsif windows?
       puts 'Starting rhoconnect...'
-      system(env, "#{command} --port #{port} -P #{rhoconnect_pid} #{rackup_config}")
+      system(env, "#{command} --host #{host} --port #{port} -P #{rhoconnect_pid} #{rackup_config}")
     else
       if dtach_installed?
         puts 'Detach with Ctrl+\  Re-attach with rhoconnect attach'
         sleep 2
-        system(env, "dtach -A #{rhoconnect_socket} #{command} --port #{port} -P #{rhoconnect_pid} #{rackup_config}")
+        system(env, "dtach -A #{rhoconnect_socket} #{command} --host #{host} --port #{port} -P #{rhoconnect_pid} #{rackup_config}")
       else
-        system(env, "#{command} --port #{port} -P #{rhoconnect_pid} #{rackup_config}")
+        system(env, "#{command} --host #{host} --port #{port} -P #{rhoconnect_pid} #{rackup_config}")
       end
     end
   end
