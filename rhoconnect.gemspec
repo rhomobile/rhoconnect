@@ -39,15 +39,15 @@ Gem::Specification.new do |s|
     'README.md'
   ]
 
-  s.add_dependency('bundler', '~> 1.0')
-  s.add_dependency('rack', '~> 1.5.2')
-  s.add_dependency('sinatra', '~> 1.4')
-  s.add_dependency('rake', '~> 10.4.0')
-  s.add_dependency('json', '~> 1.8')
-  s.add_dependency('rubyzip', '~> 1.1')
-  s.add_dependency('connection_pool', '~> 1.2.0')
-  s.add_dependency('redis', '~> 3.3.5')
-  s.add_dependency('resque', '>= 1.22.0')
+  s.add_dependency('bundler', '~> 1.17.3')
+  s.add_dependency('rack', '~> 2.0.6')
+  s.add_dependency('sinatra', '~> 2.0.5')
+  s.add_dependency('rake', '~> 12.3.2')
+  s.add_dependency('json', '>= 1.8', '< 2.0')
+  s.add_dependency('rubyzip', '~> 1.2.2')
+  s.add_dependency('connection_pool', '~> 2.2.2')
+  s.add_dependency('redis', '~> 4.1.0')
+  s.add_dependency('resque', '>= 2.0.0')
   s.add_dependency('rest-client', '~> 2.0.2')
-  s.add_dependency('thor', '~> 0.18.0')
+  s.add_dependency('thor', '~> 0.20.3')
 end

@@ -143,7 +143,7 @@ module TestHelpers
   end
 
   def setup_post_yield(response)
-    RestClient.stub(:post).and_yield(response, nil, nil)
+    allow(RestClient).to receive(:post).and_yield(response, nil, nil)
   end
 
   def set_state(state,append=false)
@@ -186,11 +186,11 @@ module TestHelpers
       expected = result[dockey]
       begin
         if expected.is_a?(Hash)
-          Store.get_data(dockey).should == expected
+          expect(Store.get_data(dockey)).to eq(expected)
         elsif expected.is_a?(Array)
-          Store.get_data(dockey,Array).should == expected
+          expect(Store.get_data(dockey, Array)).to eq(expected)
         else
-          Store.get_value(dockey).should == expected
+          expect(Store.get_value(dockey)).to eq(expected)
         end
       rescue RSpec::Expectations::ExpectationNotMetError => e
         message = "\nVerifying `#{dockey}`\n\n" + e.to_s
@@ -204,11 +204,11 @@ module TestHelpers
       expected = result[dockey]
       begin
         if expected.is_a?(Hash)
-          docobj.get_data(dockey).should == expected
+          expect(docobj.get_data(dockey)).to eq(expected)
         elsif expected.is_a?(Array)
-          docobj.get_data(dockey,Array).should == expected
+          expect(docobj.get_data(dockey,Array)).to eq(expected)
         else
-          docobj.get_value(dockey).should == expected
+          expect(docobj.get_value(dockey)).to eq(expected)
         end
       rescue RSpec::Expectations::ExpectationNotMetError => e
         message = "\nVerifying `#{dockey}`\n\n" + e.to_s
@@ -222,7 +222,7 @@ module TestHelpers
       expected = result[dockey]
       begin
         data,assoc_keys = source.get_queue(dockey)
-        data.should == expected
+        expect(data).to eq(expected)
       rescue RSpec::Expectations::ExpectationNotMetError => e
         message = "\nVerifying `#{dockey}`\n\n" + e.to_s
         Kernel::raise(RSpec::Expectations::ExpectationNotMetError.new(message))

@@ -61,7 +61,7 @@ describe "Model" do
 
   it "should create model with trailing spaces" do
     s = setup_adapter('SimpleAdapter ')
-    Rhoconnect::Model::Base.create(s).is_a?(SimpleAdapter).should be_true
+    Rhoconnect::Model::Base.create(s).is_a?(SimpleAdapter).should be  true
   end
 
   describe "model methods" do
