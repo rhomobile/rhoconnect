@@ -50,11 +50,11 @@ describe "XDomainSessionWrapper middleware" do
         'QUERY_STRING' => PROPER_QUERY_STRING
     }
     status, headers, body = @middleware_new_routes.call(env)
-    200.should == status
-    COOKIE_ANOTHER_NV.should == headers['Set-Cookie']
-    COOKIE_NV.should_not == env['HTTP_COOKIE']
-    headers['Content-Length'].should == body[0].length.to_s
-    ''.should == body[0]
+    expect(status).to eq(200)
+    expect(COOKIE_ANOTHER_NV). to eq(headers['Set-Cookie'])
+    expect(COOKIE_NV).not_to eq(env['HTTP_COOKIE'])
+    expect(headers['Content-Length']).to eq(body[0].length.to_s)
+    expect(body[0]).to eq('')
   end
 
   it "should skip if it isn't a sync protocol URI, for old REST routes" do
@@ -63,11 +63,11 @@ describe "XDomainSessionWrapper middleware" do
         'QUERY_STRING' => PROPER_QUERY_STRING
     }
     status, headers, body = @middleware_old_routes.call(env)
-    200.should == status
-    COOKIE_ANOTHER_NV.should == headers['Set-Cookie']
-    COOKIE_NV.should_not == env['HTTP_COOKIE']
-    headers['Content-Length'].should == body[0].length.to_s
-    ''.should == body[0]
+    expect(status).to eq(200)
+    expect(COOKIE_ANOTHER_NV). to eq(headers['Set-Cookie'])
+    expect(COOKIE_NV).not_to eq(env['HTTP_COOKIE'])
+    expect(headers['Content-Length']).to eq(body[0].length.to_s)
+    expect(body[0]).to eq('')
   end
 
   it "should process cookie from QUERY_STRING if it is a sync protocol URI, for new REST routes" do
@@ -76,11 +76,11 @@ describe "XDomainSessionWrapper middleware" do
         'QUERY_STRING' => PROPER_QUERY_STRING
     }
     status, headers, body = @middleware_new_routes.call(env)
-    200.should == status
-    COOKIE_ANOTHER_NV.should == headers['Set-Cookie']
-    env['HTTP_COOKIE'].should == COOKIE_VALUE
-    headers['Content-Length'].should == body[0].length.to_s
-    ''.should == body[0]
+    expect(status).to eq(200)
+    expect(COOKIE_ANOTHER_NV). to eq(headers['Set-Cookie'])
+    expect(env['HTTP_COOKIE']).to eq(COOKIE_VALUE)
+    expect(headers['Content-Length']).to eq(body[0].length.to_s)
+    expect(body[0]).to eq('')
   end
 
   it "should process cookie from QUERY_STRING if it is a sync protocol URI, for old REST routes" do
@@ -89,11 +89,11 @@ describe "XDomainSessionWrapper middleware" do
         'QUERY_STRING' => PROPER_QUERY_STRING
     }
     status, headers, body = @middleware_old_routes.call(env)
-    200.should == status
-    COOKIE_ANOTHER_NV.should == headers['Set-Cookie']
-    env['HTTP_COOKIE'].should == COOKIE_VALUE
-    headers['Content-Length'].should == body[0].length.to_s
-    ''.should == body[0]
+    expect(status).to eq(200)
+    expect(COOKIE_ANOTHER_NV). to eq(headers['Set-Cookie'])
+    expect(env['HTTP_COOKIE']).to eq(COOKIE_VALUE)
+    expect(headers['Content-Length']).to eq(body[0].length.to_s)
+    expect(body[0]).to eq('')
   end
 
   it "shouldn't process cookie from QUERY_STRING if there is no appropriate parameter name or value, for new REST routes" do
@@ -102,11 +102,11 @@ describe "XDomainSessionWrapper middleware" do
         'QUERY_STRING' => WRONG_QUERY_STRING
     }
     status, headers, body = @middleware_new_routes.call(env)
-    200.should == status
-    COOKIE_ANOTHER_NV.should == headers['Set-Cookie']
-    env['HTTP_COOKIE'].should_not == COOKIE_VALUE
-    headers['Content-Length'].should == body[0].length.to_s
-    ''.should == body[0]
+    expect(status).to eq(200)
+    expect(COOKIE_ANOTHER_NV). to eq(headers['Set-Cookie'])
+    expect(env['HTTP_COOKIE']).not_to eq(COOKIE_VALUE)
+    expect(headers['Content-Length']).to eq(body[0].length.to_s)
+    expect(body[0]).to eq('')
   end
 
   it "shouldn't process cookie from QUERY_STRING if there is no appropriate parameter name or value, for old REST routes" do
@@ -115,11 +115,11 @@ describe "XDomainSessionWrapper middleware" do
         'QUERY_STRING' => WRONG_QUERY_STRING
     }
     status, headers, body = @middleware_old_routes.call(env)
-    200.should == status
-    COOKIE_ANOTHER_NV.should == headers['Set-Cookie']
-    env['HTTP_COOKIE'].should_not == COOKIE_VALUE
-    headers['Content-Length'].should == body[0].length.to_s
-    ''.should == body[0]
+    expect(status).to eq(200)
+    expect(COOKIE_ANOTHER_NV). to eq(headers['Set-Cookie'])
+    expect(env['HTTP_COOKIE']).not_to eq(COOKIE_VALUE)
+    expect(headers['Content-Length']).to eq(body[0].length.to_s)
+    expect(body[0]).to eq('')
   end
 
   it "should respond with cookie in a body if it is a login URI, for new REST routes" do
@@ -128,11 +128,11 @@ describe "XDomainSessionWrapper middleware" do
         'QUERY_STRING' => PROPER_QUERY_STRING
     }
     status, headers, body = @middleware_new_routes.call(env)
-    200.should == status
-    headers['Set-Cookie'].should == COOKIE_ANOTHER_NV
-    env['HTTP_COOKIE'].should == COOKIE_VALUE
-    headers['Content-Length'].should == body[0].length.to_s
-    ''.should_not == body[0]
+    expect(status).to eq(200)
+    expect(headers['Set-Cookie']).to eq(COOKIE_ANOTHER_NV)
+    expect(env['HTTP_COOKIE']).to eq(COOKIE_VALUE)
+    expect(headers['Content-Length']).to eq(body[0].length.to_s)
+    expect('').not_to eq(body[0])
   end
 
   it "should respond with cookie in a body if it is a login URI, for old REST routes" do
@@ -141,10 +141,10 @@ describe "XDomainSessionWrapper middleware" do
         'QUERY_STRING' => PROPER_QUERY_STRING
     }
     status, headers, body = @middleware_old_routes.call(env)
-    200.should == status
-    headers['Set-Cookie'].should == COOKIE_ANOTHER_NV
-    env['HTTP_COOKIE'].should == COOKIE_VALUE
-    headers['Content-Length'].should == body[0].length.to_s
-    ''.should_not == body[0]
+    expect(status).to eq(200)
+    expect(headers['Set-Cookie']).to eq(COOKIE_ANOTHER_NV)
+    expect(env['HTTP_COOKIE']).to eq(COOKIE_VALUE)
+    expect(headers['Content-Length']).to eq(body[0].length.to_s)
+    expect('').not_to eq(body[0])
   end
 end

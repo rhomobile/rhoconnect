@@ -16,13 +16,13 @@ describe "Record" do
   end
 
   it "should add metric to the record and trim record size" do
-    Time.stub(:now).and_return { @now }
+    allow(Time).to receive(:now) { @now }
     10.times { @now += 1; Rhoconnect::Stats::Record.add('foo') }
     Store.zrange('stat:foo', 0, -1).should == ["2:12", "2:14", "2:16", "2:18"]
   end
 
   it "should add single record" do
-    Time.stub(:now).and_return { @now += 1; @now }
+    allow(Time).to receive(:now) { @now += 1; @now }
     Rhoconnect::Stats::Record.add('foo')
     Store.zrange('stat:foo', 0, -1).should == ["1:10"]
   end
@@ -49,7 +49,7 @@ describe "Record" do
   end
 
   it "should add absolute metric value" do
-    Time.stub(:now).and_return { @now }
+    allow(Time).to receive(:now) { @now }
     time = 0
     4.times do
       @now += 1
@@ -62,7 +62,7 @@ describe "Record" do
   it "should update metric" do
     Rhoconnect.stats = true
     @incr = 0
-    Time.stub(:now).and_return do
+    allow(Time).to receive(:now) do
       if @incr > 0
         @now += 1
         @incr -= 1
@@ -80,13 +80,13 @@ describe "Record" do
   end
 
   it "should get range of metric values" do
-    Time.stub(:now).and_return { @now }
+    allow(Time).to receive(:now) { @now }
     10.times { @now += 1; Rhoconnect::Stats::Record.add('foo') }
     Rhoconnect::Stats::Record.range('foo', 0, 1).should == ["2:12", "2:14"]
   end
 
   it "should reset metric" do
-    Time.stub(:now).and_return { @now }
+    allow(Time).to receive(:now) { @now }
     10.times { @now += 1; Rhoconnect::Stats::Record.add('foo') }
     Store.zrange('stat:foo', 0, -1).should == ["2:12", "2:14", "2:16", "2:18"]
     Rhoconnect::Stats::Record.reset('foo')

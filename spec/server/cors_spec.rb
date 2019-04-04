@@ -53,9 +53,9 @@ describe "CORS middleware" do
             allow.resource nil,   :headers => :any, :methods => [:get, :post, :put, :delete], :credentials => true
           rescue Exception => e
             exception_happens = true
-            e.is_a?(TypeError).should == true
+            expect(e.is_a?(TypeError)).to be true
           end
-          exception_happens.should == true
+          expect(exception_happens).to be true
 
           allow.resource "/*", :headers => :any, :methods => [:get, :post, :put, :delete], :credentials => true
         end
@@ -68,8 +68,8 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
     }
     status, headers, body = mv.call(env)
-    200.should == status
-    headers['Access-Control-Allow-Origin'].should == '*'
+    expect(200).to eq(status)
+    expect(headers['Access-Control-Allow-Origin']).to eq('*')
   end
 
   it "preflight check should disable unknown origins" do
@@ -80,8 +80,8 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
     }
     status, headers, body = @middleware.call(env)
-    200.should == status
-    headers['Access-Control-Allow-Origin'].should_not == 'wrong_origin'
+    expect(200).to eq(status)
+    expect(headers['Access-Control-Allow-Origin']).not_to eq('wrong_origin')
   end
 
   it "preflight check should allow known origins" do
@@ -92,8 +92,8 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
     }
     status, headers, body = @middleware.call(env)
-    200.should == status
-    headers['Access-Control-Allow-Origin'].should == 'allowed_origin'
+    expect(200).to eq(status)
+    expect(headers['Access-Control-Allow-Origin']).to eq('allowed_origin')
   end
 
   it "able to use fallback X-ORIGIN request header if ORIGIN header is undefined" do
@@ -104,8 +104,8 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
     }
     status, headers, body = @middleware.call(env)
-    200.should == status
-    headers['Access-Control-Allow-Origin'].should == 'allowed_origin'
+    expect(200).to eq(status)
+    expect(headers['Access-Control-Allow-Origin']).to eq('allowed_origin')
   end
 
   it "preflight check treats empty 'null' origin as 'file://' one" do
@@ -116,8 +116,8 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
     }
     status, headers, body = @middleware.call(env)
-    200.should == status
-    headers['Access-Control-Allow-Origin'].should == 'file://'
+    expect(200).to eq(status)
+    expect(headers['Access-Control-Allow-Origin']).to eq('file://')
   end
 
   it "preflight check should enable allowed request headers" do
@@ -129,9 +129,9 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'allowed_header'
     }
     status, headers, body = @middleware.call(env)
-    200.should == status
+    expect(200).to eq(status)
     #headers['Access-Control-Allow-Origin'].should == 'allowed_origin'
-    headers['Access-Control-Allow-Headers'].should == 'allowed_header'
+    expect(headers['Access-Control-Allow-Headers']).to eq('allowed_header')
   end
 
   it "preflight check should disable not allowed request headers" do
@@ -143,9 +143,9 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'not_allowed_header'
     }
     status, headers, body = @middleware.call(env)
-    200.should == status
+    expect(200).to eq(status)
     #headers['Access-Control-Allow-Origin'].should == 'allowed_origin'
-    headers['Access-Control-Allow-Headers'].should_not == 'not_allowed_header'
+    expect(headers['Access-Control-Allow-Headers']).not_to eq('not_allowed_header')
   end
 
   it "preflight check should allow any request headers if configured so" do
@@ -157,9 +157,9 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'not_allowed_header'
     }
     status, headers, body = @middleware.call(env)
-    200.should == status
+    expect(200).to eq(status)
     #headers['Access-Control-Allow-Origin'].should == 'allowed_origin'
-    headers['Access-Control-Allow-Headers'].should == 'not_allowed_header'
+    expect(headers['Access-Control-Allow-Headers']).to eq('not_allowed_header')
   end
 
 
@@ -171,8 +171,8 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
     }
     status, headers, body = @middleware.call(env)
-    200.should == status
-    headers['Access-Control-Expose-Headers'].should == 'Content-Length'
+    expect(200).to eq(status)
+    expect(headers['Access-Control-Expose-Headers']).to eq('Content-Length')
   end
 
   it "no response headers should be exposed by default" do
@@ -183,8 +183,8 @@ describe "CORS middleware" do
         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
     }
     status, headers, body = @middleware.call(env)
-    200.should == status
-    headers['Access-Control-Expose-Headers'].should == ''
+    expect(200).to eq(status)
+    expect(headers['Access-Control-Expose-Headers']).to eq('')
   end
 
 

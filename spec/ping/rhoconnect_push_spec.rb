@@ -13,18 +13,18 @@ describe "Ping using RhoConnect push" do
 
   it "should ping rhoconnect push successfully" do
     result = ''
-    @response.stub(:code).and_return(204)
-    @response.stub(:body).and_return(result)
-    @response.stub(:return!).and_return(@response)
-    RestClient.stub(:post).and_return(@response)
+    allow(@response).to receive(:code).and_return(204)
+    allow(@response).to receive(:body).and_return(result)
+    allow(@response).to receive(:return!).and_return(@response)
+    allow(RestClient).to receive(:post).and_return(@response)
     res = RhoconnectPush.ping(@params)
-    res.body.should == result
-    res.code.should == 204
+    expect(res.body).to eq(result)
+    expect(res.code).to eq(204)
   end
 
   it "should ping rhoconnect push with missing push_server property" do
-    RhoconnectPush.stub(:get_config).and_return({:test => {}})
-    lambda { RhoconnectPush.ping(@params) }.should raise_error(
+    allow(RhoconnectPush).to receive(:get_config).and_return({:test => {}})
+    expect(lambda { RhoconnectPush.ping(@params) }).to raise_error(
       RhoconnectPush::InvalidPushServer, "Missing or invalid `:push_server` in settings/settings.yml."
     )
   end
@@ -32,11 +32,11 @@ describe "Ping using RhoConnect push" do
 
   it "should ping rhoconnect push with 400 response" do
     result = ''
-    @response.stub(:code).and_return(400)
-    @response.stub(:body).and_return(result)
-    @response.stub(:return!).and_return(@response)
+    allow(@response).to receive(:code).and_return(400)
+    allow(@response).to receive(:body).and_return(result)
+    allow(@response).to receive(:return!).and_return(@response)
     setup_post_yield(@response)
-    lambda { RhoconnectPush.ping(@params) }.should raise_error(
+    expect(lambda { RhoconnectPush.ping(@params) }).to raise_error(
       RhoconnectPush::InvalidPushRequest, "Invalid push request."
     )
   end
@@ -52,6 +52,6 @@ describe "Ping using RhoConnect push" do
       }
     }
     actual = RhoconnectPush.push_message(@params)
-    JSON.parse(actual).should == expected
+    expect(JSON.parse(actual)).to eq(expected)
   end
 end

@@ -13,11 +13,11 @@ describe "Middleware" do
     @now = 10.0
     Store.flush_all
     app = double('app')
-    app.stub(:call)
+    allow(app).to receive(:call)
     Rhoconnect.stats = true
     Rhoconnect::Server.enable :stats
     @middleware_new_routes = Rhoconnect::Middleware::Stats.new(app)
-    Store.stub(:lock).and_yield
+    allow(Store).to receive(:lock).and_yield
   end
 
   after(:each) do
@@ -27,7 +27,7 @@ describe "Middleware" do
 
   it "should compute http average" do
     @incr = 0
-    Time.stub(:now).and_return do
+    allow(Time).to receive(:now) do
       if @incr > 0
         @now += 0.3
         @incr -= 1
@@ -43,15 +43,15 @@ describe "Middleware" do
     }
     10.times { @incr = 3; @middleware_new_routes.call(env) }
     metric = 'http:GET:/api/application/query:SampleAdapter'
-    Rhoconnect::Stats::Record.key(metric).should == "stat:#{metric}"
+    expect(Rhoconnect::Stats::Record.key(metric)).to eq("stat:#{metric}")
 
     # The conversion algorithm (float to string) currently checks two precisions.
     # it tries 16 digits and if that's not enough it then uses 17.
-    Rhoconnect::Stats::Record.range(metric, 0, -1).should == [
+    expect(Rhoconnect::Stats::Record.range(metric, 0, -1)).to eq([
       "2.0,0.6000000000000014:12",
       "2.0,0.6000000000000014:14",
       "2.0,0.6000000000000014:16",
       "2.0,0.6000000000000014:18"
-    ]
+    ])
   end
 end

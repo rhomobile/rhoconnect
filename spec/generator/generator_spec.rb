@@ -37,7 +37,7 @@ describe "Generator" do
               'settings/settings.yml',
               'spec/spec_helper.rb'
             ].each do |template|
-              File.exist?("/tmp/#{appname}/#{template}").should be_true
+              File.exist?("/tmp/#{appname}/#{template}").should be true
             end
           end
         end
@@ -61,7 +61,7 @@ describe "Generator" do
               'public',
               'settings/settings.yml'
             ].each do |template|
-              File.exist?("/tmp/#{appname}/#{template}").should be_true
+              File.exist?("/tmp/#{appname}/#{template}").should be true
             end
           end
         end
@@ -85,10 +85,10 @@ describe "Generator" do
           Dir.chdir appname do
             Rhoconnect::SourceGenerator.start([source])
 
-            File.exist?("/tmp/#{appname}/models/ruby/#{source}.rb").should be_true
-            File.exist?("/tmp/#{appname}/controllers/ruby/#{source}_controller.rb").should be_true
-            File.exist?("/tmp/#{appname}/spec/models/ruby/#{source}_spec.rb").should be_true
-            File.exist?("/tmp/#{appname}/spec/controllers/ruby/#{source}_controller_spec.rb").should be_true
+            File.exist?("/tmp/#{appname}/models/ruby/#{source}.rb").should be true
+            File.exist?("/tmp/#{appname}/controllers/ruby/#{source}_controller.rb").should be true
+            File.exist?("/tmp/#{appname}/spec/models/ruby/#{source}_spec.rb").should be true
+            File.exist?("/tmp/#{appname}/spec/controllers/ruby/#{source}_controller_spec.rb").should be true
           end
         end
       end

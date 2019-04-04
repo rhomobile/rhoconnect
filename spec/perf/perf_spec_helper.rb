@@ -41,12 +41,12 @@ def generate_fake_data(num=1000,unique=false)
       unique_prefix = "#{n}-#{Time.now.to_s}"
     end
     res[n.to_s] = {
-      "FirstName" => Faker::Name.first_name + unique_prefix,
-      "LastName" => Faker::Name.last_name + unique_prefix,
-      "Email" =>  Faker::Internet.free_email + unique_prefix,
-      "Company" => Faker::Company.name + unique_prefix,
+      "FirstName" => FFaker::Name.first_name + unique_prefix,
+      "LastName" => FFaker::Name.last_name + unique_prefix,
+      "Email" =>  FFaker::Internet.free_email + unique_prefix,
+      "Company" => FFaker::Company.name + unique_prefix,
       "JobTitle" => title + unique_prefix,
-      "Phone1" => Faker::PhoneNumber.phone_number + unique_prefix
+      "Phone1" => FFaker::PhoneNumber.phone_number + unique_prefix
     }
   end
   res

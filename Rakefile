@@ -40,7 +40,7 @@ begin
     RSpec::Core::RakeTask.new("spec:#{type}") do |t|
       t.rspec_opts = ["-b", "-c", "-fd"]
       t.pattern = FileList[TYPES[type]]
-      t.rcov = false
+      #t.rcov = false
     end
   end
 
@@ -53,7 +53,7 @@ begin
   desc "Run doc generator - dumps out doc/protocol.html"
   RSpec::Core::RakeTask.new('doc') do |t|
     t.pattern = FileList['spec/doc/*_spec.rb']
-    t.rcov = false
+    #t.rcov = false
   end
 
 rescue LoadError
