@@ -22,9 +22,10 @@ examples/simple/settings/apple_push_cert.pem
 .bundle
 *~
 bench/lib/testdata/*.txt
-Gemfile.lock
+#Gemfile.lock
 bench/benchapp/Gemfile.lock
 bench/blobapp/Gemfile.lock
+
 TODO
 node_modules/
 *.log
