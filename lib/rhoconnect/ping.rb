@@ -1,3 +1,3 @@
 require 'rhoconnect/ping/apple'
 require 'rhoconnect/ping/rhoconnect_push'
-require 'rhoconnect/ping/gcm'
+require 'rhoconnect/ping/fcm'
