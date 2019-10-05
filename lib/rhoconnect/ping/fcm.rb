@@ -37,16 +37,11 @@ module Rhoconnect
 
       scope = Google::Apis::Messages::AUTH_MESSAGES
       authorization = Google::Auth.get_application_default(scope)
-
-      puts '----'
-      puts authorization
       
       service = Google::Apis::Messages::MessagesService.new(project_id: project_id)
       service.authorization = authorization
       
-      puts params
-
-      puts service.notify(fcm_message(package_name,params))
+      service.notify(fcm_message(package_name,params))
 
     end
 
@@ -63,20 +58,15 @@ module Rhoconnect
       android['collapse_key'] = (rand * 100000000).to_i.to_s
       android['priority'] = 'high'
       android['restricted_package_name'] = package_name
+      android['data'] = data
       android['notification'] = {}
-      android['notification']['title'] = 'Test message'
+      # android['notification']['title'] = 'Test message'
       android['notification']['body'] = params['message']
 
       message = Google::Apis::Messages::Message.new(
         token: params['device_pin'].to_s,
-        payload: data,
         android: android
       )
-      
-      puts '----'
-      puts message.message_object.token
-      puts data.to_json
-      puts '----'
       
       message
     end
