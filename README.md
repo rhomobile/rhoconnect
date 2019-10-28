@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rhomobile/rhoconnect.svg?branch=master)](https://travis-ci.org/rhomobile/rhoconnect)
+
 RhoConnect App Integration Server
 -------------------------------------------------------------
 RhoConnect is an app integration server which keeps enterprise data current and available on users’ devices.
