@@ -96,7 +96,7 @@ GEM
     mustermann (1.0.3)
     net-ssh (5.2.0)
     netrc (0.11.0)
-    nokogiri (1.10.2)
+    nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     pleaserun (0.0.30)
       cabin (> 0)
