@@ -50,4 +50,4 @@ group :build do
 end
 
 gem 'google-api-client', '~> 0.31.0'
-gem 'google-api-fcm', :git => 'https://github.com/oniksfly/google-api-fcm.git'
+gem 'google-api-fcm', '~> 0.1.7'

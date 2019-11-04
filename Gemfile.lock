@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/oniksfly/google-api-fcm.git
-  revision: 72eff48e6b919cbed01bd53f77c400a98e4ad363
-  specs:
-    google-api-fcm (0.1.6)
-      google-api-client (~> 0.17)
-
-GIT
   remote: https://github.com/tauplatform/async-rack.git
   revision: 4f411e7b416894a52426eb3b26c2415e5ead927e
   specs:
@@ -19,7 +12,7 @@ PATH
       bundler (~> 1.17.3)
       connection_pool (~> 2.2.2)
       google-api-client (~> 0.31.0)
-      google-api-fcm
+      google-api-fcm (~> 0.1.7)
       json (>= 1.8, < 2.0)
       rack (~> 2.0.6)
       rake (~> 12.3.2)
@@ -100,6 +93,8 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.0)
       signet (~> 0.10)
+    google-api-fcm (0.1.7)
+      google-api-client (~> 0.17)
     googleauth (0.9.0)
       faraday (~> 0.12)
       jwt (>= 1.4, < 3.0)
@@ -234,7 +229,7 @@ DEPENDENCIES
   fog-aws (~> 3.4.0)
   fpm (>= 1.11.00)
   google-api-client (~> 0.31.0)
-  google-api-fcm!
+  google-api-fcm (~> 0.1.7)
   jdbc-sqlite3 (>= 3.7.2)
   jruby-openssl (>= 0.7.4)
   net-ssh (~> 5.2.0)
