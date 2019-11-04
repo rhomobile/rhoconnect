@@ -48,3 +48,6 @@ end
 group :build do
   gem 'fpm', '>= 1.11.00'
 end
+
+gem 'google-api-client', '~> 0.31.0'
+gem 'google-api-fcm', :git => 'https://github.com/oniksfly/google-api-fcm.git'

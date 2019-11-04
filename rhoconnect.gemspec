@@ -50,4 +50,6 @@ Gem::Specification.new do |s|
   s.add_dependency('resque', '>= 2.0.0')
   s.add_dependency('rest-client', '~> 2.0.2')
   s.add_dependency('thor', '~> 0.20.3')
+  s.add_dependency('google-api-client', '~> 0.31.0')
+  s.add_dependency('google-api-fcm')
 end
