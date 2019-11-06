@@ -8,7 +8,8 @@ describe "Ping Android FCM" do
       "sources" => [@s.name], "message" => 'hello world',
       "vibrate" => '5', "badge" => '5', "sound" => 'hello.mp3'}
     @response = double('response')
-    Rhoconnect.settings[:fcm_api_key] = 'validkey'
+    Rhoconnect.settings[:fcm_project_id] = 'valid_project_id'
+    Rhoconnect.settings[:package_name] = 'valid_package_name'
   end
 
   it "should ping fcm successfully" do
@@ -18,14 +19,21 @@ describe "Ping Android FCM" do
     allow(@response).to receive(:headers).and_return({})
     allow(@response).to receive(:return!).and_return(@response)
     setup_post_yield(@response)
-    expect(Gcm.ping(@params).body).to eq(result)
+    expect(Fcm.ping(@params).body).to eq(result)
   end
 
   it "should raise error on missing fcm_project_id setting" do
     key = Rhoconnect.settings[:fcm_project_id.dup]
     Rhoconnect.settings[:fcm_project_id] = nil
-    expect(lambda { Fcm.ping(@params) }).to raise_error(Gcm::InvalidProjectId, 'Missing `:fcm_project_id:` option in settings/settings.yml')
+    expect(lambda { Fcm.ping(@params) }).to raise_error(Fcm::InvalidProjectId, 'Missing `:fcm_project_id:` option in settings/settings.yml')
     Rhoconnect.settings[:fcm_project_id] = key
+  end
+
+  it "should raise error on missing package_name setting" do
+    key = Rhoconnect.settings[:package_name.dup]
+    Rhoconnect.settings[:package_name] = nil
+    expect(lambda { Fcm.ping(@params) }).to raise_error(Fcm::InvalidPackageName, 'Missing `:package_name:` option in settings/settings.yml')
+    Rhoconnect.settings[:package_name] = key
   end
 
   it "should ping fcm with 503 connection error" do
@@ -69,25 +77,54 @@ describe "Ping Android FCM" do
   end
 
   it "should compute fcm_message" do
-    expected = {
-      'registration_ids' => [@c.device_pin],
-      'data' => {
-        'do_sync' => @s.name,
-        'alert' => "hello world",
-        'vibrate' => '5',
-        'sound' => "hello.mp3"
-      }
-    }
-    actual = Fcm.gcm_message(@params)
-    expect(actual).to eq(expected)
+
+    data = {}
+    data['do_sync'] = @s.name
+    data['alert'] = "hello world"
+    data['vibrate'] = '5'
+    data['sound'] = "hello.mp3"
+
+    android = {}
+    android['collapse_key'] = (rand * 100000000).to_i.to_s
+    android['priority'] = 'high'
+    android['restricted_package_name'] = Rhoconnect.settings[:package_name]
+    android['data'] = data
+    android['notification'] = {}
+    android['notification']['body'] = "hello world"
+
+    message = Google::Apis::Messages::Message.new(
+        token: @c.device_pin,
+        android: android
+    )
+
+    actual = Fcm.fcm_message(Rhoconnect.settings[:package_name], @params)
+    expect(actual).to eq(message)
   end
 
   it "should trim empty or nil params from fcm_message" do
-    expected = {'registration_ids' => [@c.device_pin],
-      'data' => {'vibrate' => '5', 'do_sync' => '', 'sound' => "hello.mp3"} }
+
+    data = {}
+    data['do_sync'] = ''
+    data['vibrate'] = '5'
+    data['sound'] = "hello.mp3"
+
+    android = {}
+    android['collapse_key'] = (rand * 100000000).to_i.to_s
+    android['priority'] = 'high'
+    android['restricted_package_name'] = Rhoconnect.settings[:package_name]
+    android['data'] = data
+    android['notification'] = {}
+    android['notification']['body'] = nil
+
+    message = Google::Apis::Messages::Message.new(
+        token: @c.device_pin,
+        android: android
+    )
+
     params = {"device_pin" => @c.device_pin,
       "sources" => [], "message" => '', "vibrate" => '5', "sound" => 'hello.mp3'}
-    actual = Fcm.gcm_message(params)
-    expect(actual).to eq(expected)
+
+    actual = Fcm.fcm_message(Rhoconnect.settings[:package_name], params)
+    expect(actual).to eq(message)
   end
 end
