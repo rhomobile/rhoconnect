@@ -22,10 +22,10 @@ describe "Ping Android FCM" do
   end
 
   it "should raise error on missing fcm_project_id setting" do
-    key = Rhoconnect.settings[:fcm_project_id.dup
-    Rhoconnect.settings[:fcm_project_id = nil
+    key = Rhoconnect.settings[:fcm_project_id.dup]
+    Rhoconnect.settings[:fcm_project_id] = nil
     expect(lambda { Fcm.ping(@params) }).to raise_error(Gcm::InvalidProjectId, 'Missing `:fcm_project_id:` option in settings/settings.yml')
-    Rhoconnect.settings[:fcm_project_id = key
+    Rhoconnect.settings[:fcm_project_id] = key
   end
 
   it "should ping fcm with 503 connection error" do
