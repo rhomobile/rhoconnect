@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
   s.add_dependency('sinatra', '~> 2.0.5')
   s.add_dependency('rake', '~> 12.3.2')
   s.add_dependency('json', '>= 1.8', '< 2.0')
-  s.add_dependency('rubyzip', '~> 1.2.2')
+  s.add_dependency('rubyzip', '>= 1.2.2', '< 2.1.0')
   s.add_dependency('connection_pool', '~> 2.2.2')
   s.add_dependency('redis', '~> 4.1.0')
   s.add_dependency('resque', '>= 2.0.0')
