@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__),'..','spec_helper')
 
-describe "Ping Android GCM" do
+xdescribe "Ping Android GCM" do
   include_examples "SharedRhoconnectHelper", :rhoconnect_data => false
 
   before(:each) do
