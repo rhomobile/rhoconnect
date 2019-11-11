@@ -33,8 +33,10 @@ describe 'PingJob' do
     scrubbed_params = params.dup
     scrubbed_params['vibrate'] = '5'
 
-    Apple.should_receive(:ping).once.with({'device_pin' => @c.device_pin,
-                                           'device_port' => @c.device_port}.merge!(scrubbed_params))
+    expect(Apple).to receive(:ping).once.with({
+                                                  'device_pin' => @c.device_pin,
+                                                  'device_port' => @c.device_port
+                                              }.merge!(scrubbed_params))
     PingJob.perform(params)
   end
 
@@ -49,7 +51,7 @@ describe 'PingJob' do
               'phone_id' => nil,
               'device_app_id' => nil,
               'device_app_version' => nil}
-    Apple.should_receive(:ping).once.with({'device_pin' => @c.device_pin,
+    expect(Apple).to receive(:ping).once.with({'device_pin' => @c.device_pin,
                                            'device_port' => @c.device_port}.merge!(params))
     PingJob.perform(params)
   end
@@ -66,7 +68,7 @@ describe 'PingJob' do
               'device_app_id' => nil,
               'device_app_version' => nil}
     @c.device_type = 'unknown_device_type'
-    PingJob.should_receive(:log).once.with("Dropping ping request for unsupported platform '#{@c.device_type}'")
+    expect(PingJob).to receive(:log).once.with("Dropping ping request for unsupported platform '#{@c.device_type}'")
     PingJob.perform(params)
   end
 
@@ -81,8 +83,8 @@ describe 'PingJob' do
               'device_app_id' => nil,
               'device_app_version' => nil}
     @c.device_type = nil
-    PingJob.should_receive(:log).once.with("Skipping ping for non-registered client_id '#{@c.id}'...")
-    lambda {PingJob.perform(params)}.should_not raise_error
+    expect(PingJob).to receive(:log).once.with("Skipping ping for non-registered client_id '#{@c.id}'...")
+    expect {PingJob.perform(params)}.not_to raise_error
   end
 
   it 'should skip ping for empty device_pin' do
@@ -97,8 +99,8 @@ describe 'PingJob' do
               'device_app_version' => nil, }
     @c.device_type = 'Android'
     @c.device_pin = nil
-    PingJob.should_receive(:log).once.with("Skipping ping for non-registered client_id '#{@c.id}'...")
-    lambda {PingJob.perform(params)}.should_not raise_error
+    expect(PingJob).to receive(:log).once.with("Skipping ping for non-registered client_id '#{@c.id}'...")
+    expect {PingJob.perform(params)}.not_to raise_error
   end
 
   it 'should drop ping if it\'s already in user\'s device pin list' do
@@ -119,9 +121,9 @@ describe 'PingJob' do
     @c_fields.delete(:id)
     @c2 = Client.create(@c_fields, {:source_name => @s_fields[:name]})
 
-    Apple.should_receive(:ping).with({'device_pin' => @c.device_pin, 'device_port' => @c.device_port}.merge!(params))
-    PingJob.should_receive(:log).twice.with(/Dropping ping request for client/)
-    lambda {PingJob.perform(params)}.should_not raise_error
+    expect(Apple).to receive(:ping).with({'device_pin' => @c.device_pin, 'device_port' => @c.device_port}.merge!(params))
+    expect(PingJob).to receive(:log).twice.with(/Dropping ping request for client/)
+    expect {PingJob.perform(params)}.not_to raise_error
   end
 
   it 'should drop ping if it\'s already in user\'s phone id list and device pin is different' do
@@ -143,12 +145,12 @@ describe 'PingJob' do
     @c_fields.delete(:id)
     @c2 = Client.create(@c_fields, {:source_name => @s_fields[:name]})
 
-    Apple.should_receive(:ping).with({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port}.merge!(params))
-    PingJob.should_receive(:log).twice.with(/Dropping ping request for client/)
-    lambda {PingJob.perform(params)}.should_not raise_error
+    expect(Apple).to receive(:ping).with({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port}.merge!(params))
+    expect(PingJob).to receive(:log).twice.with(/Dropping ping request for client/)
+    expect {PingJob.perform(params)}.not_to raise_error
   end
 
-  it 'should ping two different users from two different devices - Apple and GCM' do
+  xit 'should ping two different users from two different devices - Apple and GCM' do
     params = {'user_id' => [@u.id, @u1.id],
               'api_token' => @api_token,
               'sources' => [@s.name],
@@ -165,8 +167,30 @@ describe 'PingJob' do
     scrubbed_params['vibrate'] = '5'
     @c1.device_push_type = 'Gcm'
 
-    Apple.should_receive(:ping).with(params.merge!({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port}))
-    Gcm.should_receive(:ping).with({'device_pin' => @c1.device_pin, 'device_port' => @c1.device_port}.merge!(scrubbed_params))
+    expect(Apple).to receive(:ping).with(params.merge!({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port}))
+    expect(Gcm).to receive(:ping).with({'device_pin' => @c1.device_pin, 'device_port' => @c1.device_port}.merge!(scrubbed_params))
+    PingJob.perform(params)
+  end
+
+  it 'should ping two different users from two different devices - Apple and FCM' do
+    params = {'user_id' => [@u.id, @u1.id],
+              'api_token' => @api_token,
+              'sources' => [@s.name],
+              'message' => 'hello world',
+              'vibrate' => '5',
+              'badge' => '5',
+              'sound' => 'hello.mp3',
+              'phone_id' => nil,
+              'device_app_id' => nil,
+              'device_app_version' => nil, }
+    @c.phone_id = '3'
+
+    scrubbed_params = params.dup
+    scrubbed_params['vibrate'] = '5'
+    @c1.device_push_type = 'Fcm'
+
+    expect(Apple).to receive(:ping).with(params.merge!({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port}))
+    expect(Fcm).to receive(:ping).with({'device_pin' => @c1.device_pin, 'device_port' => @c1.device_port}.merge!(scrubbed_params))
     PingJob.perform(params)
   end
 
@@ -183,9 +207,9 @@ describe 'PingJob' do
     @c.phone_id = '3'
     @c1.phone_id = '3'
 
-    Apple.should_receive(:ping).with({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port}.merge!(params))
-    PingJob.should_receive(:log).once.with(/Dropping ping request for client/)
-    lambda {PingJob.perform(params)}.should_not raise_error
+    expect(Apple).to receive(:ping).with({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port}.merge!(params))
+    expect(PingJob).to receive(:log).once.with(/Dropping ping request for client/)
+    expect {PingJob.perform(params)}.not_to raise_error
   end
 
   it 'should drop ping with two different users with the same pin' do
@@ -201,12 +225,12 @@ describe 'PingJob' do
               'device_app_version' => nil, }
     @c1.device_pin = @c.device_pin
 
-    Apple.should_receive(:ping).with({'device_pin' => @c.device_pin, 'device_port' => @c.device_port}.merge!(params))
-    PingJob.should_receive(:log).once.with(/Dropping ping request for client/)
-    lambda {PingJob.perform(params)}.should_not raise_error
+    expect(Apple).to receive(:ping).with({'device_pin' => @c.device_pin, 'device_port' => @c.device_port}.merge!(params))
+    expect(PingJob).to receive(:log).once.with(/Dropping ping request for client/)
+    expect {PingJob.perform(params)}.not_to raise_error
   end
 
-  it 'should process all pings even if some of them are failing' do
+  xit 'should process all pings even if some of them are failing' do
     params = {'user_id' => [@u.id, @u1.id],
               'api_token' => @api_token,
               'sources' => [@s.name],
@@ -226,13 +250,30 @@ describe 'PingJob' do
     params.merge!({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port})
     allow(Apple).to receive(:ping).with(params).and_raise(SocketError.new("Socket failure"))
     allow(Gcm).to receive(:ping).with({'device_pin' => @c1.device_pin, 'device_port' => @c1.device_port}.merge!(scrubbed_params))
-    exception_raised = false
-    begin
-      PingJob.perform(params)
-    rescue Exception => e
-      exception_raised = true
-    end
-    exception_raised.should == true
+    expect{ PingJob.perform(params)}.to raise_error
+  end
+
+  it 'should process all pings even if some of them are failing' do
+    params = {'user_id' => [@u.id, @u1.id],
+              'api_token' => @api_token,
+              'sources' => [@s.name],
+              'message' => 'hello world',
+              'vibrate' => '5',
+              'badge' => '5',
+              'sound' => 'hello.mp3',
+              'phone_id' => nil,
+              'device_app_id' => nil,
+              'device_app_version' => nil, }
+    @c.phone_id = '3'
+
+    scrubbed_params = params.dup
+    scrubbed_params['vibrate'] = '5'
+    @c1.device_push_type = 'Fcm'
+
+    params.merge!({'device_pin' => @c.device_pin, 'phone_id' => @c.phone_id, 'device_port' => @c.device_port})
+    allow(Apple).to receive(:ping).with(params).and_raise(SocketError.new("Socket failure"))
+    allow(Fcm).to receive(:ping).with({'device_pin' => @c1.device_pin, 'device_port' => @c1.device_port}.merge!(scrubbed_params))
+    expect{ PingJob.perform(params)}.to raise_error
   end
 
   it 'should skip ping for unknown user or user with no clients' do
@@ -246,7 +287,7 @@ describe 'PingJob' do
               'phone_id' => nil,
               'device_app_id' => nil,
               'device_app_version' => nil, }
-    PingJob.should_receive(:log).once.with(/Skipping ping for unknown user 'fake_user' or 'fake_user' has no registered clients.../)
+    expect(PingJob).to receive(:log).once.with(/Skipping ping for unknown user 'fake_user' or 'fake_user' has no registered clients.../)
     PingJob.perform(params)
   end
 
@@ -264,7 +305,7 @@ describe 'PingJob' do
     }
     scrubbed_params = params.dup
 
-    RhoconnectPush.should_receive(:ping).once.with(
+    expect(RhoconnectPush).to receive(:ping).once.with(
         {'device_pin' => @c.device_pin}.merge!(scrubbed_params)
     )
     PingJob.perform(params)
