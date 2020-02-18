@@ -49,6 +49,6 @@ group :build do
   gem 'fpm', '>= 1.11.00'
 end
 
-gem 'signet', '~> 0.11.0'
+gem 'signet', '~> 0.7'
 gem 'google-api-client', '~> 0.31.0'
 gem 'google-api-fcm', '~> 0.1.7'
