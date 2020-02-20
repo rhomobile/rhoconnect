@@ -29,7 +29,7 @@ group :development do
   # gem 'debugger'
   gem 'aws-s3', '>= 0.6.3', :require => 'aws/s3'
   gem 'sqlite3', ">= 1.4.0", :platforms => [:ruby, :mswin, :mingw]
-  gem "excon", "~> 0.62.0"
+  gem "excon", ">= 0.71.0"
   gem "net-ssh", "~> 5.2.0"
   gem "fog-aws", "~> 3.4.0"
   gem 'ffaker', '~> 2.10.0'
@@ -49,6 +49,6 @@ group :build do
   gem 'fpm', '>= 1.11.00'
 end
 
-gem 'signet', '~> 0.11.0'
+gem 'signet', '~> 0.7'
 gem 'google-api-client', '~> 0.31.0'
 gem 'google-api-fcm', '~> 0.1.7'
