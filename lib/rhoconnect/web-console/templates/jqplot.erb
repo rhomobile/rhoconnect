@@ -41,7 +41,7 @@ end
 	var doc = document.getElementById('chartdiv');
 	if(doc){
 		doc.style.display = '';
-		plot = $.jqplot('chartdiv',<%=@sources[0]['data'].to_json.gsub(/"/,"'")%>,<%=fix_json(@sources[0]['options'].to_json)%>);
+		plot = $.jqplot('chartdiv',<%=@sources[0]['data'].to_json.gsub(/"/,"'")%>,<%=@sources[0]['options'].to_json.gsub(/"/,"'").gsub(/('.*?enderer'):'(.*?)'/,'\1:\2')%>);
 		plot.redraw();
 	}
 </script>
