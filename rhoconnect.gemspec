@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   ]
 
   s.add_dependency('bundler', '~> 1.17.3')
-  s.add_dependency('rack', '~> 2.0.6')
+  s.add_dependency('rack', '>= 2.0.6', '< 2.3.0')
   s.add_dependency('sinatra', '~> 2.0.5')
   s.add_dependency('rake', '~> 12.3.2')
   s.add_dependency('json', '>= 1.8', '< 2.0')
