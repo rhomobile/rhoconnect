@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_dependency('redis-namespace', '~> 1.6.0')
   s.add_dependency('redis', '~> 4.1.0')
   s.add_dependency('resque', '>= 2.0.0')
-  s.add_dependency('rest-client', '~> 2.0.2')
+  s.add_dependency('rest-client', '~> 2.1.0')
   s.add_dependency('thor', '~> 0.20.3')
   s.add_dependency('signet', '~> 0.11.0')
   s.add_dependency('google-api-client', '~> 0.31.0')
