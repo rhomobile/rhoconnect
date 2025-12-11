@@ -7,7 +7,7 @@ module Bench
       file_name = generate_blob ? "#{num}-blob_data.txt" : "#{num}-data.txt"
       file = File.join(File.dirname(__FILE__), '..', "testdata", file_name)
       data = nil
-      if File.exists?(file) and not generate
+      if File.exist?(file) and not generate
         data = open(file, 'r') {|f| Marshal.load(f)}
       else
         data = generate_fake_data(num, generate_blob)

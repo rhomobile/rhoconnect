@@ -34,7 +34,7 @@ describe "RhoconnectCommandLineInterface" do
     tasks << 'rhoconnect_attach' unless jruby?
   end
   tasks << if jruby? then "rhoconnect_war" else "rhoconnect_console" end
-  tasks << 'rhoconnect_spec' if File.exists?(File.join(Dir.pwd,'Gemfile'))
+  tasks << 'rhoconnect_spec' if File.exist?(File.join(Dir.pwd,'Gemfile'))
   tasks.each do |dir|
     Dir.glob(File.join(File.dirname(__FILE__),  "..", "..", "commands", "#{dir}", "*.rb")) do |file|
       require file

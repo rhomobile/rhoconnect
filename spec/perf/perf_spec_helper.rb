@@ -4,7 +4,7 @@ require_relative '../spec_helper'
 def get_test_data(num=1000)
   file = File.join(SPEC_PATH, "testdata","#{num}-data.txt")
   data = nil
-  if File.exists?(file)
+  if File.exist?(file)
     data = open(file, 'r') {|f| Marshal.load(f)}
   else
     data = generate_fake_data(num)

@@ -17,8 +17,8 @@ desc "redis-install", 'Install the latest verison of Redis from Github (requires
       puts "Installed redis-benchmark, redis-cli and redis-server to #{bin_dir}"
 
       ENV['PREFIX'] and conf_dir = "#{ENV['PREFIX']}/etc" or conf_dir = "#{RedisRunner.prefix}etc"
-      unless File.exists?("#{conf_dir}/redis.conf")
-        system "mkdir #{conf_dir}" unless File.exists?("#{conf_dir}")
+      unless File.exist?("#{conf_dir}/redis.conf")
+        system "mkdir #{conf_dir}" unless File.exist?("#{conf_dir}")
         system "cp /tmp/redis/redis.conf #{conf_dir}/redis.conf"
         puts "Installed redis.conf to #{conf_dir} \n You should look at this file!"
       end #unless

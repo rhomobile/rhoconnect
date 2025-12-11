@@ -39,20 +39,20 @@ Execute.define_task do
 
     unless windows?
       Dir.chdir('/tmp/')
-      system "rm /tmp/dtach-#{version}.tar.gz" if File.exists?("/tmp/dtach-#{version}.tar.gz")
+      system "rm /tmp/dtach-#{version}.tar.gz" if File.exist?("/tmp/dtach-#{version}.tar.gz")
       system "rm -rf /tmp/dtach-#{version}" if File.directory?("/tmp/dtach-#{version}")
 
       uri_str = "https://sourceforge.net/projects/dtach/files/dtach/#{version}/dtach-#{version}.tar.gz"
       fetch(uri_str, version, limit = 10)
 
-      raise "Failed to download dtach-#{version}.tar.gz file." unless File.exists?("dtach-#{version}.tar.gz") && File.stat("dtach-#{version}.tar.gz").size != 0
+      raise "Failed to download dtach-#{version}.tar.gz file." unless File.exist?("dtach-#{version}.tar.gz") && File.stat("dtach-#{version}.tar.gz").size != 0
 
       system("tar xzf dtach-#{version}.tar.gz")
       Dir.chdir("/tmp/dtach-#{version}/")
       system "cd /tmp/dtach-#{version}/ && ./configure && make"
 
       ENV['PREFIX'] and bin_dir = "#{ENV['PREFIX']}/bin" or bin_dir = "#{RedisRunner.prefix}bin"
-      mkdir_p(bin_dir) unless File.exists?(bin_dir)
+      mkdir_p(bin_dir) unless File.exist?(bin_dir)
       system "sudo cp /tmp/dtach-#{version}/dtach #{bin_dir}"
 
       system "rm /tmp/dtach-#{version}.tar.gz"

@@ -50,8 +50,8 @@ namespace :redis do
 	    puts "Installed redis-benchmark, redis-cli and redis-server to #{bin_dir}"
 
 	    ENV['PREFIX'] and conf_dir = "#{ENV['PREFIX']}/etc" or conf_dir = "#{RedisRunner.prefix}etc"
-	    unless File.exists?("#{conf_dir}/redis.conf")
-	      sh "mkdir #{conf_dir}" unless File.exists?("#{conf_dir}")
+	    unless File.exist?("#{conf_dir}/redis.conf")
+	      sh "mkdir #{conf_dir}" unless File.exist?("#{conf_dir}")
 	      sh "cp /tmp/redis/redis.conf #{conf_dir}/redis.conf"
 	      puts "Installed redis.conf to #{conf_dir} \n You should look at this file!"
 	    end
@@ -68,7 +68,7 @@ namespace :redis do
   desc "Download package"
   task :download do
     unless windows?
-      system 'rm -rf /tmp/redis/' if File.exists?("#{RedisRunner.redisdir}")
+      system 'rm -rf /tmp/redis/' if File.exist?("#{RedisRunner.redisdir}")
       system 'git clone git://github.com/antirez/redis.git /tmp/redis -n'
       system "cd #{RedisRunner.redisdir} && git reset --hard && git checkout #{REDIS_RELEASE}"
     else
@@ -87,7 +87,7 @@ namespace :dtach do
   task :install => [:about] do
     unless windows?
       Dir.chdir('/tmp/')
-      unless File.exists?('/tmp/dtach-0.8.tar.gz')
+      unless File.exist?('/tmp/dtach-0.8.tar.gz')
         require 'net/http'
 
         url = 'http://downloads.sourceforge.net/project/dtach/dtach/0.8/dtach-0.8.tar.gz'

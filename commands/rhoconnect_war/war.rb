@@ -7,7 +7,7 @@ Execute.define_task do
       if not File::exists? "config/warble.rb"
         puts "generating Warbler's config file"
         includeDirs = []
-        Dir.mkdir('config') if not File.exists?('config')
+        Dir.mkdir('config') if not File.exist?('config')
         aFile = File.new("config/warble.rb", "w+")
         if aFile
           includeDirs = FileList['*'].exclude do |entry|

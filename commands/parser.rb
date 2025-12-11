@@ -15,7 +15,7 @@ module HelpCommand
       tasks << 'rhoconnect_attach' unless jruby?
     end
     tasks << if jruby? then "rhoconnect_war" else "rhoconnect_console" end
-    tasks << 'rhoconnect_spec' if File.exists?(File.join(Dir.pwd,'Gemfile'))
+    tasks << 'rhoconnect_spec' if File.exist?(File.join(Dir.pwd,'Gemfile'))
     tasks.each do |dir|
       Dir.glob(File.join(File.dirname(__FILE__),  "..", "commands", "#{dir}", "*.rb")) do |file|
         next if windows? &&
@@ -32,7 +32,7 @@ module RunTimeCommands
     %w[start stop restart startbg startdebug].include?(input)
   end
   def self.execute(input)
-    if File.exists?(File.join(Dir.pwd,'Gemfile')) && input =~ /start/
+    if File.exist?(File.join(Dir.pwd,'Gemfile')) && input =~ /start/
       require 'bundler'
       Bundler.require
     end
@@ -146,7 +146,7 @@ end
 module RoutesCommand
   def self.match?(input); input == 'routes'; end
   def self.execute(input)
-    if File.exists?(File.join(Dir.pwd,'Gemfile'))
+    if File.exist?(File.join(Dir.pwd,'Gemfile'))
       require 'bundler'
       Bundler.require
     end
@@ -160,7 +160,7 @@ end
 module SpecCommand
   def self.match?(input); input == 'spec'; end
   def self.execute(input)
-    if File.exists?(File.join(Dir.pwd,'Gemfile'))
+    if File.exist?(File.join(Dir.pwd,'Gemfile'))
       require 'bundler'
       Bundler.require
       require_relative '../commands/rhoconnect_spec/spec' if Bundler.load.specs.find{ |s| s.name == 'rspec' }

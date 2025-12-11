@@ -30,7 +30,7 @@ objects.each { |obj| files << "#{obj.key}" }
 
 # Remove the files before downloading new in case they already exist
 cmd "rm -rf #{channel}" if File.directory? channel
-cmd "rm -f #{channel}/SHA1/checksum" if File.exists?("#{channel}/SHA1/checksum")
+cmd "rm -f #{channel}/SHA1/checksum" if File.exist?("#{channel}/SHA1/checksum")
 
 puts "Downloading S3 files"
 files.each do |file|

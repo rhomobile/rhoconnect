@@ -78,7 +78,7 @@ module Bench
     def start_rhoconnect_app(options)
       options[:app_started] = false
       path = options[:start_server] || '.'
-      if not File.exists?(File.join(path,'settings','settings.yml'))
+      if not File.exist?(File.join(path,'settings','settings.yml'))
         puts " Invalid Rhoconnect app path '#{path}' - no app files can be found there"
         return false
       end
@@ -110,7 +110,7 @@ module Bench
       return unless options[:app_started] == true
       
       path = options[:start_server] || '.'
-      if not File.exists?(File.join(path,'settings','settings.yml'))
+      if not File.exist?(File.join(path,'settings','settings.yml'))
         puts " Invalid Rhoconnect app path '#{path}' - no app files can be found there"
         return
       end

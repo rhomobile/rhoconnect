@@ -748,7 +748,7 @@ describe "Server" do
       data = Store.get_data('test_create_storage')
       expect(data.size).to eq(2)
       data.each do |id, obj|
-        expect(File.exists?(obj['txtfile-rhoblob'])).to be true
+        expect(File.exist?(obj['txtfile-rhoblob'])).to be true
       end
     end
   end

@@ -10,7 +10,7 @@ module Utilities
 
   def mk_bin_dir(bin_dir)
     begin
-      mkdir_p bin_dir unless File.exists?(bin_dir)
+      mkdir_p bin_dir unless File.exist?(bin_dir)
     rescue
       puts "Can't create #{bin_dir}, maybe you need to run command as root?"
       exit 1

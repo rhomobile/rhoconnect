@@ -5,7 +5,7 @@ module DownloadAndDocompress
   # Delegates the download and decompression duties
   def download_and_decompress(prefix, tarballs)
     tarballs.each do |url|
-      if !File.exists?("#{ get_tarball_name url }") || !File.exists?("#{ get_version url }")
+      if !File.exist?("#{ get_tarball_name url }") || !File.exist?("#{ get_version url }")
         puts "Downloading #{url} ..."
         wget_download prefix, url
         decompress prefix, url
@@ -17,7 +17,7 @@ module DownloadAndDocompress
   # Takes a URL and the name of a tarball and issues a wget command on said
   # URL  unless the tarball or directory already exists
   def wget_download(prefix, url)
-    if !File.exists?("#{ prefix }/#{ get_tarball_name url }") &&
+    if !File.exist?("#{ prefix }/#{ get_tarball_name url }") &&
        !File.directory?("#{ prefix }/#{ get_version url }")
        cmd "wget -P #{prefix} #{url} -o /dev/null"
        raise "ERROR: #{url} not found" if $? != 0

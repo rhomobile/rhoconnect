@@ -78,7 +78,7 @@ module Installers
         "--with-sqlite3-include=#{@options[:prefix]}/include " +
         "--with-sqlite3-lib=#{@options[:prefix]}/lib"
     gem_name = (Dir.glob "rhoconnect-*.gem")[0]
-    if gem_name && File.exists?(gem_name)
+    if gem_name && File.exist?(gem_name)
       install_gem(gem_name)
     else
       cmd "#{@options[:prefix]}/bin/bundle install --system --binstubs=/opt/rhoconnect/bin --without=test development"

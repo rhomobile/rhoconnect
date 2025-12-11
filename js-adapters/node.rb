@@ -9,7 +9,7 @@ module Rhoconnect
 
     def self.shell_node(opts = {})
       package_file = File.join(Dir.pwd,'package.json')
-      if not File.exists?(package_file)
+      if not File.exist?(package_file)
         Rhoconnect.use_node = false
         log "No `package.json` detected, disabling JavaScript support."
         return

@@ -81,7 +81,7 @@ module Bench
       
       def _load_meta_hash
         # load meta.yaml
-        @meta_hash = YAML.load_file(File.join(@results_dir,'raw_data','meta.yml')) if File.exists?(File.join(@results_dir,'raw_data','meta.yml'))
+        @meta_hash = YAML.load_file(File.join(@results_dir,'raw_data','meta.yml')) if File.exist?(File.join(@results_dir,'raw_data','meta.yml'))
         if @meta_hash.nil?
           raise "SpreadSheet Result Processor: No valid meta.yml file is found in the result directory - Skipping ..."
         end
@@ -207,7 +207,7 @@ module Bench
       
       def _load_meta_hash
         # load meta.yaml
-        @meta_hash = YAML.load_file(File.join(@results_dir,'raw_data','meta.yml')) if File.exists?(File.join(@results_dir,'raw_data','meta.yml'))
+        @meta_hash = YAML.load_file(File.join(@results_dir,'raw_data','meta.yml')) if File.exist?(File.join(@results_dir,'raw_data','meta.yml'))
         if @meta_hash.nil?
           raise "Gruff Result Processor: No valid meta.yml file is found in the result directory - Skipping ..."
         end

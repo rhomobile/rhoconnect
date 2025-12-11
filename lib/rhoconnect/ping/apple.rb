@@ -27,7 +27,7 @@ module Rhoconnect
       #puts '$$$ cert_file = '+cert_file.to_s
       cert_file = File.join(Rhoconnect.base_directory,cert_file)
 
-      cert = File.read(cert_file) if File.exists?(cert_file)
+      cert = File.read(cert_file) if File.exist?(cert_file)
 
     	host = settings[:iphoneserver]
     	port = settings[:iphoneport]

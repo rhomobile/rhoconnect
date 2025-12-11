@@ -27,8 +27,8 @@ describe "BulkDataJob" do
     verify_doc_result(@s, {:md => @data,
                            :md_copy => @data})
     validate_db(data,expected).should == true
-    File.exists?(data.dbfile+'.rzip').should == true
-    File.exists?(data.dbfile+'.gzip').should == true
+    File.exist?(data.dbfile+'.rzip').should == true
+    File.exist?(data.dbfile+'.gzip').should == true
     path = File.join(File.dirname(data.dbfile),'tmp')
     FileUtils.mkdir_p path
     unzip_file("#{data.dbfile}.rzip",path)
@@ -58,8 +58,8 @@ describe "BulkDataJob" do
     # skipped source should have :none in the DB - so we pass it for verification
     @s.sync_type = :none
     validate_db_file(data.dbfile,[@s_fields[:name], 'FixedSchemaAdapter'], expected).should == true
-    File.exists?(data.dbfile+'.rzip').should == true
-    File.exists?(data.dbfile+'.gzip').should == true
+    File.exist?(data.dbfile+'.rzip').should == true
+    File.exist?(data.dbfile+'.gzip').should == true
     path = File.join(File.dirname(data.dbfile),'tmp')
     FileUtils.mkdir_p path
     unzip_file("#{data.dbfile}.rzip",path)
