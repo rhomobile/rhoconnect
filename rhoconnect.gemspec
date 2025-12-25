@@ -39,10 +39,10 @@ Gem::Specification.new do |s|
     'README.md'
   ]
 
-  s.add_dependency('bundler', '~> 1.17.3')
+  s.add_dependency('bundler', '>= 1.17.3')
   s.add_dependency('rack', '~> 2.0.6')
   s.add_dependency('sinatra', '~> 2.0.5')
-  s.add_dependency('rake', '~> 12.3.2')
+  s.add_dependency('rake', '>= 12.3.2')
   s.add_dependency('json', '>= 1.8', '< 2.0')
   s.add_dependency('rubyzip', '>= 1.2.2', '< 2.1.0')
   s.add_dependency('connection_pool', '~> 2.2.2')
@@ -51,7 +51,7 @@ Gem::Specification.new do |s|
   s.add_dependency('resque', '>= 2.0.0')
   s.add_dependency('rest-client', '~> 2.1.0')
   s.add_dependency('thor', '~> 0.20.3')
-  s.add_dependency('signet', '~> 0.11.0')
-  s.add_dependency('google-api-client', '~> 0.31.0')
+  s.add_dependency('signet', '~> 0.12.0')
+  s.add_dependency('google-api-client', '~> 0.44.2')
   s.add_dependency('google-api-fcm', '~> 0.1.7')
 end
